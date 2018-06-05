@@ -1,0 +1,411 @@
+---
+title: "R package API"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+---
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{Supplementary materials}
+-->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+we will have separate csv/sdf files for meta, para etc SMILES but we may explore having just one SQLite file or CSV file for meta, para etc values by incorporating HT type and sigma key/index number.
+
+Base level individual functions:
+  
+**Single prediction value**
+
+```
+getfragmentsmile {
+
+1.using fmcs check the sample smiles with every in the csv fragment list (as per user selection for meta, para, ortho sigma)
+#this corresponds to sorting order in sqlite table
+2.find the mcs index and substituted fragment as per whatever attribute user selects for MCS cutoff and mcs type
+3.return mcs index and the type of sigma (HT type), and a sigma value key/index number in our sqlite table in a dataframe or csv with that info
+
+}
+
+
+
+```
+
+  
+getfragmentsmile (samplefragmentsmileobject, HT type=,  MCS selection method=, MCS cuttoff=0, description = true/false, output type=)
+
+where  
+
+- HT type type = meta, para, ortho, taft sigma, Es
+
+- MCS selection method:
+
+  - HighestMCS with lowest weight: take the highest index value with lowest weight of the substituted fragment. In this type we will take the substituted fragment with highest mcs value and replace this value only if we find another fragment with higher mcs index value and ingore ones which are equal.  
+  - tstHighest MCS with  Highest weight: take the highest index value with highest weight of the substituted fragment. for example in case of a chain containing halogens, you may get same MCS value for a lower weight chain which may have less halogens.  
+  - n highest: return mcs for user specified "n" highest substituted fragment values INCLUDING equal values  
+  - just equal values: retun a list of fragments if they have equally highest MCS index match.  
+
+- MCS cutoff this is a number from 0-1 which specifies at what point below which we should throw an error saying MCS match could not be found. Reccomended setting for meta, para, taft is 0.5 and for sigma ortho is 0 (aka it means to ignore sigma ortho).
+  
+- output type is either a CSV file, tab delimited or a dataframe, (list or any other suitable object) with fragment, substituted fragment, MCS index,HT type, sigma value key, and description. 
+
+```
+test<-fmcsBatch(sampleSDF[1], batchSDF[1:300], au=0, bu=0)
+testframe<-data.frame(test)
+testframe$Tanimoto_Coefficient
+add columns to testframe to correspond with index numbers, molecular weight, SMILES as strings etc. After that, use col max for tanimoto column to identify top matches; and return a smaller dataframe with what user has requested in attributes.
+```
+
+
+using the output from above file:
+
+```
+getsigmavalue {
+
+
+4. using the subsituted fragment, we will use it as a "key" in sqlite table to only extract values which correspond to that fragment
+5.based on sigma type attribute, we will run a specific SQL query to get the value on the fly for a particular sigma value
+6. fill that our dataframe with the value in our sqlite table 
+#sqlite table will be sorted in ascending order according to molecular weight with lowest to highest
+5. output the dataframe/file 
+}
+```
+  
+
+getsigmavalue (getfragmentfile object, HT type=, MCS selection method=, MCS cuttoff=0, sigma selection method =, output description=FALSE, output type=)
+
+where  
+
+- HT type type = meta, para, ortho, taft sigma, Es
+
+- sigma selection method can be 
+  - A: duplicate value of highest occurance aka mode plus single values   
+  - B: avg of distinct values  
+  - C: Hydrowin 1st option plus duplicate value of highest occurance aka mode  
+  - D: Hydrowin 1st option plus distinct avg.  
+  - E: Hansch preffered first plus distinct avg for when hydrowin not available  
+  - F: Hansch preffered first plus duplicate value of highest occurance aka mode plus single values
+  - G: hydrowin plus hansch preffered  
+  - H: median of distinct values ??
+  
+Avg of distict value is available in SQL (ANSI standard)
+  
+- Output description (true/false): cell contains how the value was calculated (basically a line with prints all the user selected parameters)  
+  
+- output type is either a CSV file, tab delimited or a dataframe with fragment, substituted fragment, MCS, sigma value, sigma value type description, and reference.  
+
+**Generating substituted fragment library for multiple samples**
+
+  
+getbatchmetasigma(samplefragmentsmilefile, type=, )
+
+putput is a dataframe with fragment, substituted fragment, MCS, sigma value, sigma value type description, and reference.
+
+
+### AD
+
+The average distance of the test chemical from its five nearest neighbors in the training set is compared with a threshold, which is the 95th percentile of average distance of training chemicals from their five nearest neighbors. If the average distance of a test sample
+was lesser than or equal to the threshold value, the test
+sample was retained within the AD. Sahigara 2013 and zang 2017.
+
+```
+2.6 Calculation of k-nearest neighbors for Applicability Domain (AD)
+# The chemical space is the 600 FP bits selected by GA
+> Data<- LogPdata600BitsTraining[, 1:600]
+> Query<- LogPdata600BitsTest[, 1:600]
+# Load package FNN for calculating 5-nearest neighbors
+> library(FNN)
+> Dtraining<-knn.dist(Data, k=5, algorithm=c("kd_tree", "cover_tree", "CR", "brute"))
+# The distance of the test chemical from its five nearest neighbors in the training set
+> Dtest<-knnx.dist(Data, Query, k=5, algorithm=c("kd_tree", "cover_tree", "CR", "brute"))
+```
+### working code for getfragmentsigma
+
+```
+getfragmentsigma <- function(smile = "CC1=CC=CC(=C1)C(=O)N*", HT.type = "test", sigma.selection = "A", ...){
+  
+  # "..." indicates a and b for atoms and bonds mismatch from fmcsR::fmcsbatch; add this explicitly with default =0 instead of ...
+
+  sdf1 <- ChemmineR::smiles2sdf(smile)
+  
+  if (HT.type == "meta") {
+      batchSDF <- ChemmineR::read.SDFset("meta.SDF")
+      molwt <- read.csv("meta_mol_wt.csv")
+  } else if (HT.type == "para")  {
+      batchSDF <- ChemmineR::read.SDFset("para.SDF")
+      mol_wt <- read.csv("para_mol_wt.csv")
+# inserting a test file fopr testing, remove in production code
+  } else if (HT.type == "test")  {
+      batchSDF <- ChemmineR::read.SDFset("test.SDF")
+      molwt <- read.csv("test_mol_wt.csv")
+# end of test code
+  } else if (HT.type == "ortho") {
+      batchSDF <- ChemmineR::read.SDFset("ortho.SDF")
+      molwt <- read.csv("ortho_mol_wt.csv")
+  } else if (HT.type == "taft")  {
+      batchSDF <- ChemmineR::read.SDFset("taft.SDF")
+      molwt <- read.csv("taft_mol_wt.csv")
+  } else if (HT.type == "es")    {
+      batchSDF <- ChemmineR::read.SDFset("es.SDF")
+      molwt <- read.csv("es_mol_wt.csv")
+  } else if (HT.type == "induction")    {
+      batchSDF <- ChemmineR::read.SDFset("induction.SDF")
+      molwt <- read.csv("induction_wt.csv")
+  } else {
+      stop("Specify valid HT.type")
+  }
+  
+  fmcsoutput < -fmcsR::fmcsBatch(sampleSDF[1], batchSDF)
+  fmcsoutputframe <- data.frame(fmcsoutput, molwt)
+  fmcsoutputframe <- fmcsoutputframe[order(-fmcsoutputframe$Tanimoto_Coefficient),]
+  return(fmcsoutputframe)
+
+  if (sigma.selection =="A") {
+    # A: duplicate value of highest occurance aka mode plus single values
+  } else if (sigma.selection == "B") {
+    #B: avg of distinct values  
+  } else if (sigma.selection == "C") {
+    #C: Hydrowin 1st option plus duplicate value of highest occurance aka mode
+  } else if (sigma.selection == "D") {
+    #D: Hydrowin 1st option plus distinct avg
+  } else if (sigma.selection == "E") {
+    #E: Hansch preffered first plus distinct avg for when hydrowin not available  
+  } else if (sigma.selection == "F") {
+    #F: Hansch preffered first plus duplicate value of highest occurance aka mode plus single values
+  } else if (sigma.selection =="G") {
+    #G: hydrowin plus hansch preffered
+  } else if (sigma.selection == "H") {
+    #H: median of distinct values ??
+  } else {
+      stop ("Specify valid sigma.selection")
+  }
+  
+}
+  
+```
+
+### helper function to fill  dataframe with sigma values
+
+```
+
+# fillqsardataframe ()
+ # returns a dataframe containing test chemicals with substituted fragments, mcs index values, functional group type (carbamate or acid ester)
+
+fillqsardataframe <- function (inputcsvfile = "test.csv", sigma.selection = "A", ...) {
+  # reading the csv file as a dataframe
+  
+  qsardataframe <- read.csv("inputcsvfile")
+  
+  # initializing the iterator
+  
+  i = 1
+  
+  while (qsardataframe$compoundsmile[i] =! NULL) {
+  
+    if (qsardataframe$r1meta1[i] || qsardataframe$r1ortho1[i] || qsardataframe$r1para1[i]  != NULL) {
+      # if the structure is aromatic, than we will set these to default values
+      qsardataframe$r1.sub.taft[i] <- "*C1=CC=CC=C1"
+      qsardataframe$r1.sub.es[i] <- "*C1=CC=CC=C1"
+      qsardataframe$r1.taft.mcs[i] = 1
+      qsardataframe$r1.es.mcs[i] = 1
+      qsardataframe$r1.taft.value[i] = 0.1 # check value again
+      qsardataframe$r1.es.value[i] = 0.1 # check value again
+      
+      } else {
+      # if its not aromatic, than we will need to call getfragmentsigma  
+      # coercing dataframe object smiles into a list
+      x <- list (qsardataframe$r1taft[i])
+      # coercing the list containign smiles into ChemmineR's SMIset
+      y <- as(x, "SMIset")
+      #converting SMIset into SDFSet required for evaluation in getfragmentsigma
+        
+      z <- ChemmineR::smiles2sdf(y)
+        
+      # getting sigma value from getsigmavalue function for r1taft
+      
+      t <- getfragmentsigma (smile = z, HT.type = "taft")
+      
+      # getting taft steric factor for r1taft
+      
+      es <- getfragmentsigma (smile = z, HT.type = "es")
+      
+      qsardataframe$r1.sub.taft[i] <- t$fragment[1]
+      qsardataframe$r1.sub.es[i] <- es$fragment[1]
+      qsardataframe$r1.taft.mcs[i] <- t$Tanimoto_Coefficient[1]
+      qsardataframe$r1.es.mcs[i] <- es$Tanimoto_Coefficient[1]
+      qsardataframe$r1.taft.value[i] <- t$sigmavalue[1]
+      qsardataframe$r1.es.value[i] <- es$sigmavalue[1]
+    }
+      
+    if (qsardataframe$r2meta1[i] || qsardataframe$r2ortho1[i] || qsardataframe$r2para1[i]  =! NULL) {
+      qsardataframe$r1.sub.taft[i] <- "*C1=CC=CC=C1"
+      qsardataframe$r1.sub.es[i] <- "*C1=CC=CC=C1"
+      qsardataframe$r1.taft.mcs[i] = 1
+      qsardataframe$r1.es.mcs[i] = 1
+      qsardataframe$r1.taft.value[i] = 0.12
+      qsardataframe$r1.es.value[i] = es$sigmavalue[1]
+      
+    } else {
+      # getting sigma value from getsigmavalue function for r2taft
+      t <- getfragmentsigma (smile = qsardataframe$r2taft[i], HT.type = "taft")
+      
+      # getting taft steric factor for r1taft
+      
+      es <- getfragmentsigma (smile = qsardataframe$r2taft[i], HT.type = "es")
+      
+      qsardataframe$r2.sub.taft[i] <- t$fragment[1]
+      qsardataframe$r2.sub.es[i] <- es$fragment[1]
+      qsardataframe$r2.taft.mcs[i] <- t$Tanimoto_Coefficient[1]
+      qsardataframe$r2.es.mcs[i] <- es$Tanimoto_Coefficient[1]
+      qsardataframe$r2.taft.value[i] <- t$sigmavalue[1]
+      qsardataframe$r2.es.value[i] <- es$sigmavalue[1]
+    }
+      
+    if (qsardataframe$r1meta1[i] =! NULL) {
+      # getting sigma value from getsigmavalue function for r1meta1
+      
+    } else if (qsardataframe$r1meta2[i] =! NULL) {
+      # getting sigma value from getsigmavalue function for r1meta2
+      
+    } else if (qsardataframe$r2meta1[i] =! NULL) {
+      # getting sigma value from getsigmavalue function for r2meta1
+      
+    } else if (qsardataframe$r2meta2[i] =! NULL) {
+      # getting sigma value from getsigmavalue function for r2meta2
+      
+    } else if (qsardataframe$r1ortho1[i] =! NULL) {
+      # getting sigma value from getsigmavalue function for r1ortho1
+      
+    } else if (qsardataframe$r1ortho2[i] =! NULL) {
+      # getting sigma value from getsigmavalue function for r1ortho2
+      
+    }  else if (qsardataframe$r2ortho1[i] =! NULL) {
+      # getting sigma value from getsigmavalue function for r2ortho1
+      
+    } else if (qsardataframe$r2ortho2 [i] =! NULL) {
+      # getting sigma value from getsigmavalue function for r2ortho2
+      
+    } else if (qsardataframe$r1para1 [i] =! NULL) {
+      # getting sigma value from getsigmavalue function for r1para1
+      
+    } else if (qsardataframe$r2para1[i] =! NULL) {
+      # getting sigma value from getsigmavalue function for r2para1
+      
+      }
+      
+    # moving to next chemical
+    i++
+  }
+  
+}
+```
+
+### Carbamate QSAR function
+
+```
+# creating a function with these parameters
+# gethydrolysisrate (inputcsvfile, MCS.cuttoff=0,onlyortho.cutoff=0, regression.method = "SVR", sigma.selection = "A", outputtype = CSV or R dataframe, ...)
+
+get.hydrolysisrate <- function (inputcsvfile = "test.csv", sigma.selection = "A", MCS.cuttoff=0, regression.method = "SVR", outputtype = CSV or R dataframe, ...){
+  # Calling the helper function to autofill a dataframe which will become test set for our QSARs
+  qsardataframe <- fillqsardataframe (inputcsvfile, sigma.selection = "A", ...)
+  
+  # Evaluating if the autofilled dataframe does in fact have sigma value higher than the user specified cutoff
+  if (qsardataframe$meta1mcs || meta2mcs || r1taftmcs.... < MCS.cuttoff) {
+    stop ("qsar evaluation terminated since one of the fragments has mcs tanimoto coefficient value below the user specified MCS cuttoff value")
+  }
+  
+  # Evaluating if the autofilled dataframe does in fact have sigma value higher than the user specified cutoff
+  if (qsardataframe$ortho1mcs || ortho2mcs ||...... < onlyortho.cuttoff) {
+    stop ("qsar evaluation terminated since ortho fragments have mcs tanimoto coefficient value below the user specified MCS cuttoff value")
+  }
+  
+  # Based on functional group label in qsardataframe, subsetting the master sheet to only keep those variables necassary for a particular qsar
+  if (qsardataframe$funcgroup == "carbamate") {
+    # subset the dataframe to only keep variables used for carbamates and assign it as test set
+  } else if (qsardataframe$funcgroup == "acidester") {
+    # subset the dataframe to only keep variables used for carboxylic acid esters and assign it as test set
+  } else {
+    stop ("given file doesnt contain a functional group with available QSAR model")
+  }
+  
+  if (regression.method =="SVR") {
+    # support vector regression using e1071 library 
+    # call AD function
+  } else if (regression.method == "pls") {
+    # partial least squares using pls library 
+    # call AD function
+  } else if (regression.method == "RF") {
+    # random forest regression using randomforest library
+    # call AD function
+  } else if (regression.method == "MLR") {
+    # multiple linear regression using base R linear model functions
+    # call AD function
+  } else {
+    stop ("Specify valid regression.method")
+  }
+
+```
+### Old vs new logic
+
+Old logic for obtaining substituted fragment with highest tanimoto mcs index:
+```
+MCS = batchSDF[1]
+Tanimoto=0
+Index=0
+for(i in 1:300)
+
+{
+     
+    test3<-fmcs(batchSDF[i], sampleSDF[1], fast=TRUE)
+    s<-parse_number(test3[4])
+  
+   if (s > Tanimoto)
+     
+     {
+        Tanimoto=s
+        MCS=batchSDF[i]
+        Index=i         
+    }
+}
+Tanimoto
+Index
+smiles<-sdf2smiles(MCS[1])
+
+write.SMI(smiles, file="smiles.smi")
+```
+   
+#### New logic:
+
+```
+testfun<-function(sdf1, sdf2, ...){
+
+    batchSDF<-ChemmineR::read.SDFset(sdfstr=sdf1)
+    sampleSDF<-ChemmineR::read.SDFset(sdfstr=sdf2)
+    test<-fmcsR::fmcsBatch(sampleSDF[1], batchSDF[1:300])
+    testframe<-data.frame(test)
+    return(testframe)
+}
+testfun()
+```
+
+with all parameters:
+
+```
+
+testfun<-function(sdf1, sdf2, molwtcsv, HTtype,  MCSselectionmethod, MCScuttoff=0, description = TRUE, outputtype, ...){
+  
+  batchSDF<-ChemmineR::read.SDFset(sdfstr=sdf1)
+  sampleSDF<-ChemmineR::read.SDFset(sdfstr=sdf2)
+  test<-fmcsR::fmcsBatch(sampleSDF[1], batchSDF[1:300])
+  testframe<-data.frame(test)
+  return(testframe)
+}
+testfun(sdf1 = "batch2.SDF", sdf2 = "sample.SDF", au=1, bu=0)
+```

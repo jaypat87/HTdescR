@@ -1,0 +1,5 @@
+## Functions
+export(
+    ## MCS functions
+    "htdesc", "htbatch"
+)

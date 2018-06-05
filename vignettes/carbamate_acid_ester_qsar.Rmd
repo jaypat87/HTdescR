@@ -1,0 +1,76 @@
+---
+title: "Predicting hydrolsis rates of carboxylic acid esters using MLqsarR"
+author: "Jay M. Patel"
+date: "April 16, 2018"
+output: html_document
+---
+
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{Supplementary materials}
+-->
+
+### use htdescbatch to get HT descriptors for the training and test set chemicals
+
+```
+# reading a input csv file with fragments
+
+```
+
+### use clean function to take the output from htdescbatch and convert it into a subset containing only training and test set descriptors
+
+```
+# replacing NA, and subsetting the dataframe to only give what we need
+
+```
+
+### use the qsarml to calculate summary stats for all QSARs
+
+### use qsarad for calculating applicability domains for each models
+
+
+
+
+# creating a function with these parameters
+# gethydrolysisrate (inputcsvfile, MCS.cuttoff=0,onlyortho.cutoff=0, regression.method = "SVR", sigma.selection = "A", outputtype = CSV or R dataframe, ...)
+
+get.hydrolysisrate <- function (inputcsvfile = "test.csv", sigma.selection = "A", MCS.cuttoff=0, regression.method = "SVR", outputtype = CSV or R dataframe, ...){
+  # Calling the helper function to autofill a dataframe which will become test set for our QSARs
+  qsardataframe <- fillqsardataframe (inputcsvfile, sigma.selection = "A", ...)
+  
+  # Evaluating if the autofilled dataframe does in fact have sigma value higher than the user specified cutoff
+  if (qsardataframe$meta1mcs || meta2mcs || r1taftmcs.... < MCS.cuttoff) {
+    stop ("qsar evaluation terminated since one of the fragments has mcs tanimoto coefficient value below the user specified MCS cuttoff value")
+  }
+  
+  # Evaluating if the autofilled dataframe does in fact have sigma value higher than the user specified cutoff
+  if (qsardataframe$ortho1mcs || ortho2mcs ||...... < onlyortho.cuttoff) {
+    stop ("qsar evaluation terminated since ortho fragments have mcs tanimoto coefficient value below the user specified MCS cuttoff value")
+  }
+  
+  # Based on functional group label in qsardataframe, subsetting the master sheet to only keep those variables necassary for a particular qsar
+  if (qsardataframe$funcgroup == "carbamate") {
+    # subset the dataframe to only keep variables used for carbamates and assign it as test set
+  } else if (qsardataframe$funcgroup == "acidester") {
+    # subset the dataframe to only keep variables used for carboxylic acid esters and assign it as test set
+  } else {
+    stop ("given file doesnt contain a functional group with available QSAR model")
+  }
+  
+  if (regression.method =="SVR") {
+    # support vector regression using e1071 library 
+    # call AD function
+  } else if (regression.method == "pls") {
+    # partial least squares using pls library 
+    # call AD function
+  } else if (regression.method == "RF") {
+    # random forest regression using randomforest library
+    # call AD function
+  } else if (regression.method == "MLR") {
+    # multiple linear regression using base R linear model functions
+    # call AD function
+  } else {
+    stop ("Specify valid regression.method")
+  }
+
+```
