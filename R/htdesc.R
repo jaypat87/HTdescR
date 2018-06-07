@@ -66,13 +66,21 @@ htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
   fmcsoutputframe <- fmcsoutputframe[order(-fmcsoutputframe$Tanimoto_Coefficient),]
   if (sigma.selection =="A") {
     # A: reg.avg
-    returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$epi.value[1])
+    returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.avg[1])
     return(returnlist)
 
   } else if (sigma.selection == "B") {
-    #B: avg of distinct values
-    returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$hansch.pref[1])
-    return(returnlist)
+      #B: priority order: hansch preffered > epi.value > reg.avg
+      if (is.na(fmcsoutputframe$hansch.pref[1]) == FALSE) {
+        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$hansch.pref[1])
+        return(returnlist)
+      } else if (is.na(fmcsoutputframe$epi.value[1]) == FALSE) {
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$epi.value[1])
+          return(returnlist)
+      } else {
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.avg[1])
+          return(returnlist)
+      }
   } else if (sigma.selection == "C") {
     #C: Hydrowin 1st option plus A (duplicate value of highest occurance aka mode )
     returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.avg[1])
