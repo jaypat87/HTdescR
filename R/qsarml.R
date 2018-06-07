@@ -14,7 +14,7 @@
 #building a qsar model
 
 plsqsar <- function (TrainingSet, TestSet, ...) {
-PLSqsar<-plsr(LogRateExp~.,data=TrainingSet)
+PLSqsar<-pls::plsr(LogRateExp~.,data=TrainingSet)
 return(PLSqsar)
 }
 
