@@ -97,9 +97,14 @@ htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
         return(returnlist)
       }
   } else if (sigma.selection == "D") {
-    #D: Hydrowin 1st option plus B ( distinct avg )
-    returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$D[1])
-    return(returnlist)
+      #D: priority order: epi.value > avg.dist
+      if (is.na(fmcsoutputframe$epi.value[1]) == FALSE) {
+        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$epi.value[1])
+        return(returnlist)
+      } else if (is.na(fmcsoutputframe$avg.dist[1]) == FALSE) {
+        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$avg.dist[1])
+        return(returnlist)
+      }
   } else if (sigma.selection == "E") {
     #E: Hansch preffered first plus distinct avg for when hydrowin not available
     returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$E[1])
