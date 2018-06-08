@@ -97,12 +97,15 @@ htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
         return(returnlist)
       }
   } else if (sigma.selection == "D") {
-      #D: priority order: epi.value > avg.dist
+      #D: priority order: epi.value > avg.dist > reg.avg
       if (is.na(fmcsoutputframe$epi.value[1]) == FALSE) {
         returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$epi.value[1])
         return(returnlist)
       } else if (is.na(fmcsoutputframe$avg.dist[1]) == FALSE) {
         returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$avg.dist[1])
+        return(returnlist)
+      } else {
+        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.avg[1])
         return(returnlist)
       }
   } else if (sigma.selection == "E") {
