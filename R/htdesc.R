@@ -115,7 +115,7 @@ htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
         return(returnlist)
     }
   } else if (sigma.selection == "F") {
-    #F: priority order: Hansch preffered > regular mode > regular median
+    #F: priority order: Hansch preferred > regular mode > regular median
     if (is.na(fmcsoutputframe$hansch.pref[1]) == FALSE) {
         returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$hansch.pref[1])
         return(returnlist)
@@ -126,12 +126,18 @@ htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
         returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.median[1])
         return(returnlist)
     }
-    returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$F[1])
-    return(returnlist)
   } else if (sigma.selection =="G")  {
-    #G: hydrowin plus hansch preffered
-    returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$G[1])
-    return(returnlist)
+    #G: priority order: epi.value > hansch preffered > median
+      if (is.na(fmcsoutputframe$epi.value[1]) == FALSE) {
+        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$epi.value[1])
+        return(returnlist)
+      } else if (is.na(fmcsoutputframe$hansch.pref[1]) == FALSE) {
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$hansch.pref[1])
+          return(returnlist)
+      } else {
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.median[1])
+          return(returnlist)
+      }
   } else if (sigma.selection == "H") {
     #H:  median of distinct values ??
     returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$H[1])
