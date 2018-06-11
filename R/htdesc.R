@@ -107,25 +107,25 @@ htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
       }
   } else if (sigma.selection == "E") {
     #E: priority order: hansch preffered > avg.dist
-    if (is.na(fmcsoutputframe$hansch.pref[1]) == FALSE) {
-      returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$hansch.pref[1])
-      return(returnlist)
-    } else {
-        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$avg.dist[1])
-        return(returnlist)
-    }
-  } else if (sigma.selection == "F") {
-    #F: priority order: Hansch preferred > regular mode > regular median
-    if (is.na(fmcsoutputframe$hansch.pref[1]) == FALSE) {
+      if (is.na(fmcsoutputframe$hansch.pref[1]) == FALSE) {
         returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$hansch.pref[1])
         return(returnlist)
-    } else if (is.na(fmcsoutputframe$reg.mode[1]) == FALSE) {
-        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.mode[1])
+      } else {
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$avg.dist[1])
+          return(returnlist)
+      }
+  } else if (sigma.selection == "F") {
+    #F: priority order: Hansch preferred > regular mode > regular median
+      if (is.na(fmcsoutputframe$hansch.pref[1]) == FALSE) {
+        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$hansch.pref[1])
         return(returnlist)
-    } else {
-        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.median[1])
-        return(returnlist)
-    }
+      } else if (is.na(fmcsoutputframe$reg.mode[1]) == FALSE) {
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.mode[1])
+          return(returnlist)
+      } else {
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.median[1])
+          return(returnlist)
+      }
   } else if (sigma.selection =="G")  {
     #G: priority order: epi.value > hansch preffered > median
       if (is.na(fmcsoutputframe$epi.value[1]) == FALSE) {
@@ -139,9 +139,14 @@ htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
           return(returnlist)
       }
   } else if (sigma.selection == "H") {
-    #H:  median of distinct values ??
-    returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$H[1])
-    return(returnlist)
+    #H:  mode > ag.dist
+      if (is.na(fmcsoutputframe$reg.mode[1]) == FALSE) {
+        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.mode[1])
+        return(returnlist)
+      } else {
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$avg.dist[1])
+          return(returnlist)
+      }
   } else if (sigma.selection == "U") {
     # user created sigma selection
     stop ("user has not created a custom sigma values option")
