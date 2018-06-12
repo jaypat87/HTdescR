@@ -139,7 +139,7 @@ htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
           return(returnlist)
       }
   } else if (sigma.selection == "H") {
-    #H:  mode > ag.dist
+    #H:  mode > avg.dist
       if (is.na(fmcsoutputframe$reg.mode[1]) == FALSE) {
         returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.mode[1])
         return(returnlist)

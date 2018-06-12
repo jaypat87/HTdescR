@@ -8,7 +8,8 @@ Description: Hammett-Taft descriptor calculator with mismatch tolerant
         maximum common substructure (fMCS) based fragment substitution algorithm. 
         It also includes machine learning methods to estimate hydrolysis rate constants.  
 Depends: R (>= 2.10.0)
-Suggests: BiocStyle, knitr, rmarkdown
+Suggests: BiocStyle, knitr, rmarkdown,
+    testthat
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
