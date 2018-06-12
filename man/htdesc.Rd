@@ -11,6 +11,8 @@ htdesc(smile, HT.type = "taft", sigma.selection = "A", ...)
 
 \item{HT.type}{The type of Hammett-Taft (HT) descriptor; valid inputs include "taft", "meta", "para", "ortho", "induction", "es" and "user" for a user defined sigma descriptor.}
 
+\item{sigma.selection}{The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", "H", and "U"}
+
 \item{...}{arguments from the fmcsR::fmcbatch such as a and b}
 }
 \value{
