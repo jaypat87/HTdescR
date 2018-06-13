@@ -1,6 +1,6 @@
 
-getr2 <- function(predictedY, dataset) {
-  r2<-lm(predictedY[,,2] ~ dataset = MeasuredYTest)
+getr2 <- function(predictedY, mdataset) {
+  r2<-lm(predictedY[,,2] ~ mdataset = MeasuredYTest)
   summary(r2)
 
 }
