@@ -19,10 +19,10 @@ unit_test <- test_that("htdesc function", {
   expect_equal(CNpB[[2]],7)
   expect_equal(CNpB[[3]],'*C#N')
   expect_identical(CNpB[[4]],0.70)
-  BriB <- htdesc(smile = "Br", HT.type = 'induction', sigma.selection = "B")
+  BriB <- htdesc(smile = "*Br", HT.type = 'induction', sigma.selection = "B")
   expect_identical(BriB[[1]],1)
   expect_equal(BriB[[2]],4)
-  expect_equal(BriB[[3]],'*Br')
+  expect_equal(BriB[[3]],'Br*')
   expect_identical(BriB[[4]],0.49)
 })
 
