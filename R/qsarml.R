@@ -9,7 +9,8 @@
 #'
 #' @examples
 #' htdesc (smile = "CCC", HT.type = "taft", sigma.selection = "A")
-#' create seperate functions for qsar based on random forests, pls, SVM, etc but put it in this file.
+
+#create seperate functions for qsar based on random forests, pls, SVM, etc but put it in this file.
 
 #building a qsar model
 
