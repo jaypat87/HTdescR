@@ -29,8 +29,6 @@ runTT <- function(TrainingSet, TestSet) {
   Testr2MLR <<- getr2(TestYMLR, MTestSet)
 
 
-
-
 }
 
 
