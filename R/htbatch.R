@@ -93,6 +93,8 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r1.ortho2.value[i] <- t$value
       rm (t)
 
+    } else {
+        qsardataframe$r1.ortho2.value[i] = 0
     }
 
     if (is.na(qsardataframe$r1.para1.smiles[i]) == FALSE) {
@@ -103,6 +105,8 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r1.para1.value[i] <- t$value
       rm (t)
 
+    } else {
+        qsardataframe$r1.para1.value[i] = 0
     }
 
     if (is.na(qsardataframe$r2.meta1.smiles[i]) & is.na(qsardataframe$r2.ortho1.smiles[i]) & is.na(qsardataframe$r2.para1.smiles[i]) == TRUE) {
@@ -149,8 +153,9 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r2.meta1.value[i] <- t$value
       rm (t)
 
+    } else {
+        qsardataframe$r2.meta1.value[i] = 0
     }
-
     if (is.na(qsardataframe$r2.meta2.smiles[i]) == FALSE) {
 
       t <- htdesc (smile = qsardataframe$r2.meta2.smiles[i], HT.type = "meta", sigma.selection)
@@ -159,6 +164,8 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r2.meta2.value[i] <- t$value
       rm (t)
 
+    } else {
+        qsardataframe$r2.meta2.value[i] = 0
     }
 
     if (is.na(qsardataframe$r2.ortho1.smiles[i]) == FALSE) {
@@ -169,6 +176,8 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r2.ortho1.value[i] <- t$value
       rm (t)
 
+    } else {
+        qsardataframe$r2.ortho1.value[i] = 0
     }
 
     if (is.na(qsardataframe$r2.ortho2.smiles[i]) == FALSE) {
@@ -179,6 +188,8 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r2.ortho2.value[i] <- t$value
       rm (t)
 
+    } else {
+        qsardataframe$r2.ortho2.value[i] = 0
     }
 
     if (is.na(qsardataframe$r2.para1.smiles[i]) == FALSE) {
@@ -189,6 +200,8 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r2.para1.value[i] <- t$value
       rm (t)
 
+    } else {
+        qsardataframe$r2.para1.value[i] = 0
     }
   }
 
