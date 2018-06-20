@@ -109,6 +109,18 @@ htbatch <- function (file, sigma.selection, ...) {
         qsardataframe$r1.para1.value[i] = 0
     }
 
+    if (is.na(qsardataframe$r1.es.smiles[i]) == FALSE) {
+
+      t <- htdesc (smile = qsardataframe$r1.es.smiles[i], HT.type = "es", sigma.selection)
+      qsardataframe$r1.es.sub.smiles[i] <- as.character (t$sub)
+      qsardataframe$r1.es.mcs.index[i] <- t$tanimoto
+      qsardataframe$r1.es.value[i] <- t$value
+      rm (t)
+
+    } else {
+        qsardataframe$r1.es.value[i] = 0
+    }
+
     if (is.na(qsardataframe$r2.meta1.smiles[i]) & is.na(qsardataframe$r2.ortho1.smiles[i]) & is.na(qsardataframe$r2.para1.smiles[i]) == TRUE) {
 
       # calling htdesc to fill substitute mcs values
@@ -202,6 +214,18 @@ htbatch <- function (file, sigma.selection, ...) {
 
     } else {
         qsardataframe$r2.para1.value[i] = 0
+    }
+
+    if (is.na(qsardataframe$r2.es.smiles[i]) == FALSE) {
+
+      t <- htdesc (smile = qsardataframe$r2.es.smiles[i], HT.type = "es", sigma.selection)
+      qsardataframe$r2.es.sub.smiles[i] <- as.character (t$sub)
+      qsardataframe$r2.es.mcs.index[i] <- t$tanimoto
+      qsardataframe$r2.es.value[i] <- t$value
+      rm (t)
+
+    } else {
+        qsardataframe$r2.es.value[i] = 0
     }
 
     if (is.na(qsardataframe$r1.meta1.smiles[i]) | is.na(qsardataframe$r1.ortho1.smiles[i]) | is.na(qsardataframe$r1.para1.smiles[i]) == FALSE) {
