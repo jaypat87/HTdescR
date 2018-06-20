@@ -57,7 +57,8 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r1.meta1.mcs.index[i] <- t$tanimoto
       qsardataframe$r1.meta1.value[i] <- t$value
       rm (t)
-
+    } else {
+        qsardataframe$r1.meta1.value[i] = 0
     }
 
     if (is.na(qsardataframe$r1.meta2.smiles[i]) == FALSE) {
@@ -68,6 +69,8 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r1.meta2.value[i] <- t$value
       rm (t)
 
+    } else {
+        qsardataframe$r1.meta2.value[i] = 0
     }
 
     if (is.na(qsardataframe$r1.ortho1.smiles[i]) == FALSE) {
@@ -78,6 +81,8 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r1.ortho1.value[i] <- t$value
       rm (t)
 
+    } else {
+        qsardataframe$r1.ortho1.value[i] = 0
     }
 
     if (is.na(qsardataframe$r1.ortho2.smiles[i]) == FALSE) {
@@ -192,7 +197,6 @@ htbatch <- function (file, sigma.selection, ...) {
   return (qsardataframe)
   #work still left
   # Low priority
-    # insert if statement for es and ind
     # insert output file format as a function attribute
 
   # medium priority
@@ -202,7 +206,7 @@ htbatch <- function (file, sigma.selection, ...) {
 
   # high priority
 
-    # replace NA with *H from .smiles columns from those chemicals where its proven that r1 or r2 are aromatic
+    # insert if statement for es and ind
     # replace NA with 0 for .values cells
     # you can leave NA for .mcs.index and .sub.smiles for ones where we didnt trigger getsmiles function
     # insert a summation method which adds up values for hammetts
