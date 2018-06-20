@@ -121,6 +121,18 @@ htbatch <- function (file, sigma.selection, ...) {
         qsardataframe$r1.es.value[i] = 0
     }
 
+    if (is.na(qsardataframe$r1.ind.smiles[i]) == FALSE) {
+
+      t <- htdesc (smile = qsardataframe$r1.ind.smiles[i], HT.type = "induction", sigma.selection)
+      qsardataframe$r1.ind.sub.smiles[i] <- as.character (t$sub)
+      qsardataframe$r1.ind.mcs.index[i] <- t$tanimoto
+      qsardataframe$r1.ind.value[i] <- t$value
+      rm (t)
+
+    } else {
+      qsardataframe$r1.ind.value[i] = 0
+    }
+
     if (is.na(qsardataframe$r2.meta1.smiles[i]) & is.na(qsardataframe$r2.ortho1.smiles[i]) & is.na(qsardataframe$r2.para1.smiles[i]) == TRUE) {
 
       # calling htdesc to fill substitute mcs values
@@ -222,6 +234,18 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r2.es.sub.smiles[i] <- as.character (t$sub)
       qsardataframe$r2.es.mcs.index[i] <- t$tanimoto
       qsardataframe$r2.es.value[i] <- t$value
+      rm (t)
+
+    } else {
+        qsardataframe$r2.es.value[i] = 0
+    }
+
+    if (is.na(qsardataframe$r2.ind.smiles[i]) == FALSE) {
+
+      t <- htdesc (smile = qsardataframe$r2.ind.smiles[i], HT.type = "induction", sigma.selection)
+      qsardataframe$r2.ind.sub.smiles[i] <- as.character (t$sub)
+      qsardataframe$r2.ind.mcs.index[i] <- t$tanimoto
+      qsardataframe$r2.ind.value[i] <- t$value
       rm (t)
 
     } else {
