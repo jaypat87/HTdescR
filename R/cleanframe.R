@@ -1,15 +1,11 @@
 #' Cleaning the dataframe created by htbatch
 #'
 #' Cleaning the dataframe created by htbatch
+#'
+#'
+library(tidyr)
 cleanmerge <- function (qsardataframe, ...) {
-  i = 1
-  n <- nrow (qsardataframe)
+  qsardataframe <- replace_na(qsardataframe, replace = list(r1.meta1.value = 0, r1.meta2.value = 0, r1.ortho1.value = 0, r1.ortho2.value = 0, r1.para1.value = 0, r2.meta1.value = 0, r2.meta2.value = 0, r2.ortho1.value = 0, r2.ortho2.value = 0, r2.para1.value = 0))
 
-  for (i in 1:n) {
-  if (is.na(qsardataframe$r2.meta1.value[i]) == TRUE) {
-    qsardataframe$r2.meta1.value[i] = 0
-      }
-  }
-  return (qsardataframe)
+  return(qsardataframe)
 }
-
