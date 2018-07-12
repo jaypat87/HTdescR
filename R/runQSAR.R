@@ -1,20 +1,36 @@
 
-runQSAR <- function(newdata, method){
-  #Get equations from package data
+runQSAR <- function(data, method){
 
+  #Get models from package data
 
-  if (method =="SVR") {
-    SVRpredY <- predY(TrainEqSVR, newdata)
-    return (SVMpredY)
+  allPredictions <- extractPrediction(extractedModels, unkX = data, unkOnly = TRUE, verbose = FALSE)
+  SVMpredictions <- predict(SVMmodels, newdata = data, type = "raw", na.action = "na.omit")
+  SVMpredictions <- data.frame(SVMpredictions)
+  SVMpredictions <- tibble::add_column(SVMpredictions, index = 1:nrow(SVMpredictions))
+
+  if (method =="SVMR") {
+    SVMRpredictions <- SVMpredictions[c("SVMRmodel", "index")]
+    return (SVMRpredictions)
+
+  } else if (method == "SVMP") {
+    SVMPpredictions <- SVMpredictions[c("SVMPmodel", "index")]
+    return(SVMPpredictions)
+
   } else if (method == "PLS") {
-    PLSpredY <- predY(TrainEqPLS, newdata)
-    return(PLSpredY)
+    PLSpredictions <- filter(allPredictions, model == "pls")
+    PLSpredictions <- tibble::add_column(PLSpredictions, index = 1:nrow(PLSpredictions))
+    return(PLSpredictions)
+
   } else if (method == "RF") {
-    RFpredY <- predY(TrainEqRF, newdata)
-    return(RFpredY)
+    RFpredictions <- filter(allPredictions, model == "rf")
+    RFpredictions <- tibble::add_column(RFpredictions, index = 1:nrow(RFpredictions))
+    return(RFpredictions)
+
   } else if (method == "MLR") {
-    MLRpredY <- predY(TrainEqMLR, newdata)
-    return(MLSpredY)
+    MLRpredictions <- filter(allPredictions, model == "lm")
+    MLRpredictions <- tibble::add_column(MLRpredictions, index = 1:nrow(MLRpredictions))
+    return(MLRpredictions)
+
   } else {
     stop ("Specify valid method")
   }
