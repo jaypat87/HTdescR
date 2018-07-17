@@ -23,6 +23,7 @@ Imports: RUnit, methods, ChemmineR, ChemmineOB, BiocGenerics, parallel,
     randomForest,
     stats,
     tidyr,
-    utils
+    utils,
+    tibble
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
