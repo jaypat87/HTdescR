@@ -30,15 +30,10 @@ runQSAR <- function(data, method){
     MLRpredictions <- filter(allPredictions, model == "lm")
     MLRpredictions <- tibble::add_column(MLRpredictions, index = 1:nrow(MLRpredictions))
     return(MLRpredictions)
-<<<<<<< HEAD
 
   } else {
     stop ("Specify valid method")
   }
 
-=======
-  }
->>>>>>> temp-work
 }
-
 
