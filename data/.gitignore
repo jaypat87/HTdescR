@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 RFforAD.rda
 SVMPforAD.rda
 MLRforAD.rda
 PLSforAD.rda
 SVMRforAD.rda
+=======
+SVMRforAD.rda
+MLRforAD.rda
+PLSforAD.rda
+RFforAD.rda
+SVMPforAD.rda
+>>>>>>> temp-work

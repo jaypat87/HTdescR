@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 subsetting-df.R
 findr2.R
 runTT.R
@@ -7,3 +8,9 @@ SVMRpredicted.csv
 carbamate_testing_sheet_MK-71018.csv
 FilesForAD.R
 buildTT.R
+=======
+FilesForAD.R
+findr2.R
+htbatch-forme.R
+subsetting-df.R
+>>>>>>> temp-work

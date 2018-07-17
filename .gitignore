@@ -2,5 +2,10 @@
 .Rhistory
 .RData
 .Ruserdata
+<<<<<<< HEAD
 carbamate_testing_sheet_MK-71018.csv
 SVMRpredicted.csv
+=======
+SVMRpredicted.csv
+carbamate_testing_sheet_MK-71018.csv
+>>>>>>> temp-work
