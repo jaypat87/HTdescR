@@ -57,7 +57,6 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r1.meta1.mcs.index[i] <- t$tanimoto
       qsardataframe$r1.meta1.value[i] <- t$value
       rm (t)
-
     }
 
     if (is.na(qsardataframe$r1.meta2.smiles[i]) == FALSE) {
@@ -96,6 +95,26 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r1.para1.sub.smiles[i] <- as.character (t$sub)
       qsardataframe$r1.para1.mcs.index[i] <- t$tanimoto
       qsardataframe$r1.para1.value[i] <- t$value
+      rm (t)
+
+    }
+
+    if (is.na(qsardataframe$r1.es.smiles[i]) == FALSE) {
+
+      t <- htdesc (smile = qsardataframe$r1.es.smiles[i], HT.type = "es", sigma.selection)
+      qsardataframe$r1.es.sub.smiles[i] <- as.character (t$sub)
+      qsardataframe$r1.es.mcs.index[i] <- t$tanimoto
+      qsardataframe$r1.es.value[i] <- t$value
+      rm (t)
+
+    }
+
+    if (is.na(qsardataframe$r1.ind.smiles[i]) == FALSE) {
+
+      t <- htdesc (smile = qsardataframe$r1.ind.smiles[i], HT.type = "induction", sigma.selection)
+      qsardataframe$r1.ind.sub.smiles[i] <- as.character (t$sub)
+      qsardataframe$r1.ind.mcs.index[i] <- t$tanimoto
+      qsardataframe$r1.ind.value[i] <- t$value
       rm (t)
 
     }
@@ -145,7 +164,6 @@ htbatch <- function (file, sigma.selection, ...) {
       rm (t)
 
     }
-
     if (is.na(qsardataframe$r2.meta2.smiles[i]) == FALSE) {
 
       t <- htdesc (smile = qsardataframe$r2.meta2.smiles[i], HT.type = "meta", sigma.selection)
@@ -185,6 +203,26 @@ htbatch <- function (file, sigma.selection, ...) {
       rm (t)
 
     }
+
+    if (is.na(qsardataframe$r2.es.smiles[i]) == FALSE) {
+
+      t <- htdesc (smile = qsardataframe$r2.es.smiles[i], HT.type = "es", sigma.selection)
+      qsardataframe$r2.es.sub.smiles[i] <- as.character (t$sub)
+      qsardataframe$r2.es.mcs.index[i] <- t$tanimoto
+      qsardataframe$r2.es.value[i] <- t$value
+      rm (t)
+
+    }
+
+    if (is.na(qsardataframe$r2.ind.smiles[i]) == FALSE) {
+
+      t <- htdesc (smile = qsardataframe$r2.ind.smiles[i], HT.type = "induction", sigma.selection)
+      qsardataframe$r2.ind.sub.smiles[i] <- as.character (t$sub)
+      qsardataframe$r2.ind.mcs.index[i] <- t$tanimoto
+      qsardataframe$r2.ind.value[i] <- t$value
+      rm (t)
+
+    }
   }
 
   closeAllConnections()
@@ -192,7 +230,6 @@ htbatch <- function (file, sigma.selection, ...) {
   return (qsardataframe)
   #work still left
   # Low priority
-    # insert if statement for es and ind
     # insert output file format as a function attribute
 
   # medium priority
@@ -202,7 +239,7 @@ htbatch <- function (file, sigma.selection, ...) {
 
   # high priority
 
-    # replace NA with *H from .smiles columns from those chemicals where its proven that r1 or r2 are aromatic
+    # insert if statement for es and ind
     # replace NA with 0 for .values cells
     # you can leave NA for .mcs.index and .sub.smiles for ones where we didnt trigger getsmiles function
     # insert a summation method which adds up values for hammetts
