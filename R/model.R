@@ -21,8 +21,8 @@ moddata <- moddata[c(8,2:7)]
 
 ##Model Building and Cross Validation
 
-options(warn=-1)
-seeds <- c(1, 2)
+options(warn=1)
+#seeds <- c(1, 2)
 
 ##do svm here and send it to cvq2?
 #q2CV <- cvq2::cvq2(modelData = moddata, formula = log.rate.exp ~ ., nFold = 5, extOut = TRUE)
