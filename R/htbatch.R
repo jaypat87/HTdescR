@@ -33,6 +33,14 @@ htbatch <- function (file, sigma.selection, ...) {
 
       }
 
+      if (is.na(qsardataframe$r1.es.smiles[i]) == FALSE) {
+        t <- htdesc (smile = qsardataframe$r1.es.smiles[i], HT.type = "es", sigma.selection)
+        qsardataframe$r1.es.sub.smiles[i] <- as.character (t$sub)
+        qsardataframe$r1.es.mcs.index[i] <- t$tanimoto
+        qsardataframe$r1.es.value[i] <- t$value
+        rm (t)
+
+      }
 
 
     } else {
@@ -40,9 +48,10 @@ htbatch <- function (file, sigma.selection, ...) {
       # if the structure is aromatic, than we will set these to default values
 
       qsardataframe$r1.taft.smiles[i] <- "*C1=CC=CC=C1"
+      qsardataframe$r1.es.smiles[i] <- "*C1=CC=CC=C1"
       qsardataframe$r1.ind.smiles[i] <- "*C1=CC=CC=C1"
 
-      # calling htdesc to fill substitute mcs values
+      # calling htdesc helper function to fill substitute mcs values
       t <- helper (type = "taft", sigma.select = sigma.selection)
       qsardataframe$r1.taft.sub.smiles[i] <- as.character (t$sub.smiles)
       qsardataframe$r1.taft.mcs.index[i] <- t$tanimoto
@@ -53,6 +62,12 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r1.ind.sub.smiles[i] <- as.character (t$sub.smiles)
       qsardataframe$r1.ind.mcs.index[i] <- t$tanimoto
       qsardataframe$r1.ind.value[i] <- t$value
+      rm (t)
+
+      t <- helper (type = "es", sigma.select = sigma.selection)
+      qsardataframe$r1.es.sub.smiles[i] <- as.character (t$sub.smiles)
+      qsardataframe$r1.es.mcs.index[i] <- t$tanimoto
+      qsardataframe$r1.es.value[i] <- t$value
       rm (t)
 
     }
@@ -106,16 +121,6 @@ htbatch <- function (file, sigma.selection, ...) {
 
     }
 
-    if (is.na(qsardataframe$r1.es.smiles[i]) == FALSE) {
-      t <- htdesc (smile = qsardataframe$r1.es.smiles[i], HT.type = "es", sigma.selection)
-      qsardataframe$r1.es.sub.smiles[i] <- as.character (t$sub)
-      qsardataframe$r1.es.mcs.index[i] <- t$tanimoto
-      qsardataframe$r1.es.value[i] <- t$value
-      rm (t)
-
-    }
-
-
 
 
 
@@ -142,12 +147,22 @@ htbatch <- function (file, sigma.selection, ...) {
 
       }
 
+      if (is.na(qsardataframe$r2.es.smiles[i]) == FALSE) {
+        t <- htdesc (smile = qsardataframe$r2.es.smiles[i], HT.type = "es", sigma.selection)
+        qsardataframe$r2.es.sub.smiles[i] <- as.character (t$sub)
+        qsardataframe$r2.es.mcs.index[i] <- t$tanimoto
+        qsardataframe$r2.es.value[i] <- t$value
+        rm (t)
+
+      }
+
 
     } else {
 
       # if the structure is aromatic, than we will set these to default values
 
       qsardataframe$r2.taft.smiles[i] <- "*C1=CC=CC=C1"
+      qsardataframe$r2.es.smiles[i] <- "*C1=CC=CC=C1"
       qsardataframe$r2.ind.smiles[i] <- "*C1=CC=CC=C1"
 
       t <- helper (type = "taft", sigma.select = sigma.selection)
@@ -160,6 +175,12 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r2.ind.sub.smiles[i] <- as.character (t$sub.smiles)
       qsardataframe$r2.ind.mcs.index[i] <- t$tanimoto
       qsardataframe$r2.ind.value[i] <- t$value
+      rm (t)
+
+      t <- helper (type = "es", sigma.select = sigma.selection)
+      qsardataframe$r2.es.sub.smiles[i] <- as.character (t$sub.smiles)
+      qsardataframe$r2.es.mcs.index[i] <- t$tanimoto
+      qsardataframe$r2.es.value[i] <- t$value
       rm (t)
 
     }
@@ -213,14 +234,6 @@ htbatch <- function (file, sigma.selection, ...) {
 
     }
 
-    if (is.na(qsardataframe$r2.es.smiles[i]) == FALSE) {
-      t <- htdesc (smile = qsardataframe$r2.es.smiles[i], HT.type = "es", sigma.selection)
-      qsardataframe$r2.es.sub.smiles[i] <- as.character (t$sub)
-      qsardataframe$r2.es.mcs.index[i] <- t$tanimoto
-      qsardataframe$r2.es.value[i] <- t$value
-      rm (t)
-
-    }
   }
 
   closeAllConnections()
