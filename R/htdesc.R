@@ -8,7 +8,7 @@
 #'
 #'
 #' @param smile SMILES string for a chemical fragment in character, factor, or SMIset datatype.
-#' @param HT.type The type of Hammett-Taft (HT) descriptor; valid inputs include "taft", "meta", "para", "ortho", "induction", "es" and "user" for a user defined sigma descriptor.
+#' @param HT.type The type of Hammett-Taft (HT) descriptor; valid inputs include "taft", "meta", "para", "ortho", "inductive", "es" and "user" for a user defined sigma descriptor.
 #' @param sigma.selection The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", "H", and "U"
 #' @param ... arguments from the fmcsR::fmcbatch such as a and b
 #' @return A list containing tanimoto coefficient for the closest matching MCS, SMILES string of the MCS, and index nuber of the matched fragment from the library.
@@ -54,7 +54,7 @@ htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
   } else if (HT.type == "es")    {
       sigmalibrarySDF <- HTdescR::esSDF
       siglookuptable <- HTdescR::es
-  } else if (HT.type == "induction")    {
+  } else if (HT.type == "inductive")    {
       sigmalibrarySDF <- HTdescR::indSDF
       siglookuptable <- HTdescR::indsigma
   } else {
