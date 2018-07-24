@@ -25,7 +25,7 @@ htbatch <- function (file, sigma.selection, ...) {
 
       if (is.na(qsardataframe$r1.ind.smiles[i]) == FALSE) {
 
-        t <- htdesc (smile = qsardataframe$r1.ind.smiles[i], HT.type = "induction", sigma.selection)
+        t <- htdesc (smile = qsardataframe$r1.ind.smiles[i], HT.type = "inductive", sigma.selection)
         qsardataframe$r1.ind.sub.smiles[i] <- as.character (t$sub)
         qsardataframe$r1.ind.mcs.index[i] <- t$tanimoto
         qsardataframe$r1.ind.value[i] <- t$value
@@ -58,7 +58,7 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r1.taft.value[i] <- t$value
       rm (t)
 
-      t <- helper (type = "induction", sigma.select = sigma.selection)
+      t <- helper (type = "inductive", sigma.select = sigma.selection)
       qsardataframe$r1.ind.sub.smiles[i] <- as.character (t$sub.smiles)
       qsardataframe$r1.ind.mcs.index[i] <- t$tanimoto
       qsardataframe$r1.ind.value[i] <- t$value
@@ -139,7 +139,7 @@ htbatch <- function (file, sigma.selection, ...) {
 
       if (is.na(qsardataframe$r2.ind.smiles[i]) == FALSE) {
 
-        t <- htdesc (smile = qsardataframe$r2.ind.smiles[i], HT.type = "induction", sigma.selection)
+        t <- htdesc (smile = qsardataframe$r2.ind.smiles[i], HT.type = "inductive", sigma.selection)
         qsardataframe$r2.ind.sub.smiles[i] <- as.character (t$sub)
         qsardataframe$r2.ind.mcs.index[i] <- t$tanimoto
         qsardataframe$r2.ind.value[i] <- t$value
@@ -171,7 +171,7 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r2.taft.value[i] <- t$value
       rm (t)
 
-      t <- helper (type = "induction", sigma.select = sigma.selection)
+      t <- helper (type = "inductive", sigma.select = sigma.selection)
       qsardataframe$r2.ind.sub.smiles[i] <- as.character (t$sub.smiles)
       qsardataframe$r2.ind.mcs.index[i] <- t$tanimoto
       qsardataframe$r2.ind.value[i] <- t$value
