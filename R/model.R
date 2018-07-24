@@ -248,5 +248,5 @@ SVMmodels <- list("SVMRmodel"=SVMRmod, "SVMPmodel"=SVMPmod)
 #Save models here
 
 devtools::use_data(dataacidester, allFinalModels, extractedModels, SVMmodels,
-                   SVMPmod, SVMRmod, PLSmod, RFmod, MLRmod, internal = TRUE, overwrite = TRUE)
+                   SVMPmod, SVMRmod, PLSmod, RFmod, MLRmod, htdescHelper, internal = TRUE, overwrite = TRUE)
 
