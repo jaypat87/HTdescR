@@ -8,7 +8,8 @@
 #'
 #'
 #' @param smile SMILES string for a chemical fragment in character, factor, or SMIset datatype.
-#' @param HT.type The type of Hammett-Taft (HT) descriptor; valid inputs include "taft", "meta", "para", "ortho", "induction", "es" and "user" for a user defined sigma descriptor.
+#' @param HT.type The type of Hammett-Taft (HT) descriptor; valid inputs include "taft", "meta", "para", "ortho", "inductive", "es" and "user" for a user defined sigma descriptor.
+#' @param sigma.selection The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", "H", and "U"
 #' @param ... arguments from the fmcsR::fmcbatch such as a and b
 #' @return A list containing tanimoto coefficient for the closest matching MCS, SMILES string of the MCS, and index nuber of the matched fragment from the library.
 #'
@@ -53,7 +54,7 @@ htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
   } else if (HT.type == "es")    {
       sigmalibrarySDF <- HTdescR::esSDF
       siglookuptable <- HTdescR::es
-  } else if (HT.type == "induction")    {
+  } else if (HT.type == "inductive")    {
       sigmalibrarySDF <- HTdescR::indSDF
       siglookuptable <- HTdescR::indsigma
   } else {
@@ -72,79 +73,79 @@ htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
   } else if (sigma.selection == "B") {
       #B: priority order: hansch preferred > epi.value > reg.avg
       if (is.na(fmcsoutputframe$hansch.pref[1]) == FALSE) {
-        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$hansch.pref[1])
+        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$hansch.pref[1])
         return(returnlist)
       } else if (is.na(fmcsoutputframe$epi.value[1]) == FALSE) {
-          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$epi.value[1])
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$epi.value[1])
           return(returnlist)
       } else {
-          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.avg[1])
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$reg.avg[1])
           return(returnlist)
       }
   } else if (sigma.selection == "C") {
       #C: priority order: epi.value > hansch preferred > avg.dist > reg.avg
       if (is.na(fmcsoutputframe$epi.value[1]) == FALSE) {
-        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$epi.value[1])
+        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$epi.value[1])
         return(returnlist)
       } else if (is.na(fmcsoutputframe$hansch.pref[1]) == FALSE) {
-          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$hansch.pref[1])
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$hansch.pref[1])
           return(returnlist)
       } else if (is.na(fmcsoutputframe$avg.dist[1]) == FALSE) {
-          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$avg.dist[1])
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$avg.dist[1])
           return(returnlist)
       } else {
-          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.avg[1])
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$reg.avg[1])
           return(returnlist)
       }
   } else if (sigma.selection == "D") {
-      #D: priority order: epi.value > avg.dist
+      #D: priority order: epi.value > avg.dist > reg.avg
       if (is.na(fmcsoutputframe$epi.value[1]) == FALSE) {
-        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$epi.value[1])
+        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$epi.value[1])
         return(returnlist)
       } else {
-          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$avg.dist[1])
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$avg.dist[1])
           return(returnlist)
       }
   } else if (sigma.selection == "E") {
     #E: priority order: hansch preffered > avg.dist
       if (is.na(fmcsoutputframe$hansch.pref[1]) == FALSE) {
-        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$hansch.pref[1])
+        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$hansch.pref[1])
         return(returnlist)
       } else {
-          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$avg.dist[1])
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$avg.dist[1])
           return(returnlist)
       }
   } else if (sigma.selection == "F") {
     #F: priority order: Hansch preferred > regular mode > regular median
       if (is.na(fmcsoutputframe$hansch.pref[1]) == FALSE) {
-        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$hansch.pref[1])
+        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$hansch.pref[1])
         return(returnlist)
       } else if (is.na(fmcsoutputframe$reg.mode[1]) == FALSE) {
-          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.mode[1])
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$reg.mode[1])
           return(returnlist)
       } else {
-          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.median[1])
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$reg.median[1])
           return(returnlist)
       }
   } else if (sigma.selection =="G")  {
     #G: priority order: epi.value > hansch preffered > median
       if (is.na(fmcsoutputframe$epi.value[1]) == FALSE) {
-        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$epi.value[1])
+        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$epi.value[1])
         return(returnlist)
       } else if (is.na(fmcsoutputframe$hansch.pref[1]) == FALSE) {
-          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$hansch.pref[1])
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$hansch.pref[1])
           return(returnlist)
       } else {
-          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.median[1])
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$reg.median[1])
           return(returnlist)
       }
   } else if (sigma.selection == "H") {
     #H:  mode > avg.dist
       if (is.na(fmcsoutputframe$reg.mode[1]) == FALSE) {
-        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.mode[1])
+        returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$reg.mode[1])
         return(returnlist)
       } else {
-          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$avg.dist[1])
+          returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$avg.dist[1])
           return(returnlist)
       }
   } else if (sigma.selection == "U") {

@@ -3,3 +3,5 @@ export(
     ## MCS functions
     "htdesc", "htbatch"
 )
+importFrom("stats", "lm", "na.omit", "predict")
+importFrom("utils", "read.csv")

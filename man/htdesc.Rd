@@ -10,6 +10,10 @@ htdesc(smile, HT.type = "taft", sigma.selection = "A", ...)
 \item{smile}{SMILES string for a chemical fragment in character, factor, or SMIset datatype.}
 
 \item{HT.type}{The type of Hammett-Taft (HT) descriptor; valid inputs include "taft", "meta", "para", "ortho", "induction", "es" and "user" for a user defined sigma descriptor.}
+
+\item{sigma.selection}{The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", "H", and "U"}
+
+\item{...}{arguments from the fmcsR::fmcbatch such as a and b}
 }
 \value{
 A list containing tanimoto coefficient for the closest matching MCS, SMILES string of the MCS, and index nuber of the matched fragment from the library.
@@ -20,4 +24,5 @@ maximum common substructure (fMCS) based fragment substitution library to get th
 }
 \examples{
 htdesc (smile = "CCC", HT.type = "taft", sigma.selection = "A")
+
 }
