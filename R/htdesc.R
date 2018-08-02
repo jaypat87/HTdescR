@@ -66,7 +66,7 @@ htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
   fmcsoutputframe <- fmcsoutputframe[order(-fmcsoutputframe$Tanimoto_Coefficient),]
   if (sigma.selection =="A") {
     # A: reg.avg
-    returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = fmcsoutputframe$fragments[1], value = fmcsoutputframe$reg.avg[1])
+    returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$reg.avg[1])
     return(returnlist)
 
   } else if (sigma.selection == "B") {
