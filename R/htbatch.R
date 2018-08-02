@@ -131,7 +131,7 @@ htbatch <- function (file, sigma.selection, ...) {
       qsardataframe$r2.taft.sub.smiles[i] <- as.character (t$sub)
       qsardataframe$r2.taft.mcs.index[i] <- t$tanimoto
       qsardataframe$r2.taft.value[i] <- t$value
-      rm (t)
+      rm(t)
 
 
       if (is.na(qsardataframe$r2.ind.smiles[i]) == FALSE) {
