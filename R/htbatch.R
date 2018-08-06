@@ -1,3 +1,13 @@
+#' Title Batch search and fill of sigma values for matching or highest matching by tanimoto coefficient chemical fragments from curated library
+#'
+#' @param file csv with columns of specific titles and filled with fragment smiles
+#' @param sigma.selection The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", "H", and "U"
+#' @param ...
+#'
+#' @returnA list containing tanimoto coefficient for the closest matching MCS, SMILES string of the MCS, and index nuber of the matched fragment from the library.
+#' @export
+#'
+#' @examples
 htbatch <- function (file, sigma.selection, ...) {
 
   #reading the csv file as a dataframe
