@@ -23,7 +23,8 @@ cleanframe <- function (qsardataframe, ...) {
       qsardataframe$r2.hammett.value[i] = 0
     }
   }
-  qsardataframe <- cbind(qsardataframe[5],qsardataframe[55], qsardataframe[56], qsardataframe[64], qsardataframe[65], qsardataframe[72])
-  as.data.frame(qsardataframe)
+
+  qsardataframe <- select(qsardataframe, log.rate.exp, r1.taft.value, r1.es.value, r2.taft.value, r2.es.value, r2.hammett.value)
+  qsar.data.frame <- as.data.frame(qsardataframe)
   return(qsardataframe)
 }
