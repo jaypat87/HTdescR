@@ -1,20 +1,24 @@
-#' Title Get Hamett-Taft descriptor for a batch file of chemical fragments
-#' Batch search and fill of sigma values for matching or highest matching by tanimoto coefficient chemical fragments from curated library
+#' Batch search and match of fragment sigma values
 #'
 #'
 #' Get values of Hammett-Taft descriptors for a given chemical fragment in SMILES string format by iterating through a lookup table. In case an exact match isnt found, this function uses a mismatch tolerant
 #' maximum common substructure (fMCS) based fragment substitution library to get the HT dexcriptors with highest tanimoto coefficient. This function iterates through a loop to complete a batch file of sigma
-#' values
+#' values.
 #'
-#'
-#' @param file csv with columns of specific titles and filled with fragment smiles
+#' @usage {
+#' htbatch(file, sigma.selection = "A")
+#' }
+#' @param file path to csv file
 #' @param sigma.selection The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", "H", and "U"
 #' @param ...
 #'
-#' @returnA list containing tanimoto coefficient for the closest matching MCS, SMILES string of the MCS, and index nuber of the matched fragment from the library.
+#' @returnA {
+#' List containing tanimoto coefficient for the closest matching MCS, SMILES string of the MCS, and index nuber of the matched fragment from the library.
+#' The results as a dataframe
+#' }
 #' @export
 #'
-#' @examples htbatch(".\folder\acidester.csv", sigma.selection ="A")
+#' @examples ## Not run: htbatch(".\folder\acidester.csv", sigma.selection ="A")
 htbatch <- function (file, sigma.selection, ...) {
 
   #reading the csv file as a dataframe
