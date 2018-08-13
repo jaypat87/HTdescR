@@ -1,8 +1,12 @@
 #' Cleaning the dataframe created by htbatch
 #'
-#' Cleaning the dataframe created by htbatch
+#' Replaces dataframe NA values with zero and condenses htbatch returned dataframe to only relevant descriptor value columns for modeling.
 #'
 #'
+#' @param qsardataframe returned dataframe from htbatch
+#' @param ... inherit arguments
+#' @examples ## Not run: cleanmerge(qsardataframe)
+#' @export
 cleanmerge <- function (qsardataframe, ...) {
   qsardataframe <- tidyr::replace_na(qsardataframe, replace = list(r1.meta1.value = 0, r1.meta2.value = 0, r1.ortho1.value = 0, r1.ortho2.value = 0, r1.para1.value = 0, r2.meta1.value = 0, r2.meta2.value = 0, r2.ortho1.value = 0, r2.ortho2.value = 0, r2.para1.value = 0))
   i = 1
