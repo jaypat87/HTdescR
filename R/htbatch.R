@@ -5,25 +5,24 @@
 #' maximum common substructure (fMCS) based fragment substitution library to get the HT dexcriptors with highest tanimoto coefficient. This function iterates through a loop to complete a batch file of sigma
 #' values.
 #'
-#' @usage {
-#' htbatch(file, sigma.selection = "A")
-#' }
+#' @usage htbatch(file, sigma.selection = "A", ...)
+#'
+#'
 #' @param file path to csv file
 #' @param sigma.selection The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", "H", and "U"
-#' @param ...
+#' @param ... inherit arguments
 #'
-#' @returnA {
-#' List containing tanimoto coefficient for the closest matching MCS, SMILES string of the MCS, and index nuber of the matched fragment from the library.
-#' The results as a dataframe
-#' }
+#' @return Filled dataframe columns resulting from similarity search and value extraction from
+#' esSDF, indSDF, metaSDF, paraSDF, orthoSDF, taftSDF, userSDF
+#'
 #' @export
 #'
 #' @examples ## Not run: htbatch(".\folder\acidester.csv", sigma.selection ="A")
-htbatch <- function (file, sigma.selection, ...) {
+htbatch <- function (file, sigma.selection = "A", ...) {
 
   #reading the csv file as a dataframe
 
-  qsardataframe <- read.csv(file, stringsAsFactors = TRUE,na.strings = "", encoding = "UTF-8")
+  qsardataframe <- utils::read.csv(file, stringsAsFactors = TRUE,na.strings = "", encoding = "UTF-8")
 
 
   # colnames(qsardataframe)[colnames(qsardataframe)=="ï..no"] <- "no"
