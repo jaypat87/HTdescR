@@ -2,23 +2,26 @@
 % Please edit documentation in R/htbatch.R
 \name{htbatch}
 \alias{htbatch}
-\title{Title Get Hamett-Taft descriptor for a batch file of chemical fragments
-Batch search and fill of sigma values for matching or highest matching by tanimoto coefficient chemical fragments from curated library}
+\title{Batch search and match of fragment sigma values}
 \usage{
-htbatch(file, sigma.selection, ...)
+htbatch(file, sigma.selection = "A", ...)
 }
 \arguments{
-\item{file}{csv with columns of specific titles and filled with fragment smiles}
+\item{file}{path to csv file}
 
 \item{sigma.selection}{The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", "H", and "U"}
 
-\item{...}{}
+\item{...}{inherit arguments}
+}
+\value{
+Filled dataframe columns resulting from similarity search and value extraction from
+esSDF, indSDF, metaSDF, paraSDF, orthoSDF, taftSDF, userSDF
 }
 \description{
 Get values of Hammett-Taft descriptors for a given chemical fragment in SMILES string format by iterating through a lookup table. In case an exact match isnt found, this function uses a mismatch tolerant
 maximum common substructure (fMCS) based fragment substitution library to get the HT dexcriptors with highest tanimoto coefficient. This function iterates through a loop to complete a batch file of sigma
-values
+values.
 }
 \examples{
-htbatch(".\\folder\\acidester.csv", sigma.selection ="A")
+## Not run: htbatch(".\\folder\\acidester.csv", sigma.selection ="A")
 }

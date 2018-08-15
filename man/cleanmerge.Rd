@@ -6,6 +6,14 @@
 \usage{
 cleanmerge(qsardataframe, ...)
 }
+\arguments{
+\item{qsardataframe}{returned dataframe from htbatch}
+
+\item{...}{inherit arguments}
+}
 \description{
-Cleaning the dataframe created by htbatch
+Replaces dataframe NA values with zero and condenses htbatch returned dataframe to only relevant descriptor value columns for modeling.
+}
+\examples{
+## Not run: cleanmerge(qsardataframe)
 }

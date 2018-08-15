@@ -24,5 +24,4 @@ maximum common substructure (fMCS) based fragment substitution library to get th
 }
 \examples{
 htdesc (smile = "CCC", HT.type = "taft", sigma.selection = "A")
-
 }
