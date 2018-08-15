@@ -15,7 +15,7 @@
 #'
 #' @examples
 #' htdesc (smile = "CCC", HT.type = "taft", sigma.selection = "A")
-#'
+#' @export
 htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
   if (class(smile) == "SMIset") {
 
