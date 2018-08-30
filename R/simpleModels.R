@@ -1,18 +1,7 @@
 #Random Split for Training and Test Sets
 
-library(caTools)
-library(svMisc)
-library(tidyr)
-library(tibble)
-library(dplyr)
-library(FNN)
-library(pls)
-library(randomForest)
-library(stats)
-library(e1701)
-
-devtools::use_data(dataacidester, internal = TRUE) #Keep this?
-
+dataacidester <- read.csv("./inst/extdata/dataacidester.csv")
+dataacidester <- dataacidester[c(2:8)]
 moddata <- dataacidester
 moddata <- dplyr::rename(moddata, rate = log.rate.exp)
 moddata <- dplyr::mutate(moddata, log.rate.exp = log10(rate))
@@ -174,10 +163,10 @@ P95 <- stats::quantile(AD4$avgDist, prob = 0.95)
 
 #Compare Test Set with AD
 
-ADTestSet <- dplyr::rownames_to_column(TestSet)
+ADTestSet <- tibble::rownames_to_column(TestSet)
 ADTestSet <- dplyr::mutate(ADTestSet, loopnum = seq_len(14))
-ADTrainSet <- dplyr::rownames_to_column(TrainingSet)
-ADTrainSet <- dplyr::add_column(ADTrainSet, loopnum = 0)
+ADTrainSet <- tibble::rownames_to_column(TrainingSet)
+ADTrainSet <- tibble::add_column(ADTrainSet, loopnum = 0)
 TestSetAppDom <- data.frame(TestSetIndex=numeric(), ADLevel= numeric(), AD=character())
 
 
@@ -187,7 +176,7 @@ for(i in 1:14){
   TestChemInd <- TestChem$rowname
   CompareSet <- dplyr::bind_rows(ADTrainSet, TestChem)
   CompareSet <- CompareSet[c(2:7)]
-  CompareAD1 <- FNN:knn.dist(CompareSet, k=5, algorithm=c("kd_tree", "cover_tree", "CR", "brute"))
+  CompareAD1 <- FNN::knn.dist(CompareSet, k=5, algorithm=c("kd_tree", "cover_tree", "CR", "brute"))
   CompareAD1 <- as.data.frame(CompareAD1)
   CompareAD2 <- dplyr::mutate(CompareAD1, avgDist = rowMeans(CompareAD1))
   TestChemAD <- CompareAD2$avgDist[57]
@@ -203,8 +192,8 @@ for(i in 1:14){
 #
 
 ADTrain <- ADTrainSet[c(3:8)]
-
-
+htdescHelper <- read.csv(file = "./inst/extdata/htdescHelper.csv", stringsAsFactors = FALSE)
+htdescHelper <- htdescHelper[c(2:8)]
 #Store allmodels
 
 devtools::use_data(dataacidester, TrainEqMLR, TrainEqPLS, TrainEqRF, TrainEqSVR,
