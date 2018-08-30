@@ -1,4 +1,4 @@
-# A R function to return sigma value from an exact matching fragment from the library or using substituted fragment.
+# R function to return sigma value from an exact matching fragment from the library or using substituted fragment.
 # devtools::use_package("fmcsR")
 
 #' Get Hamett-Taft descriptor for a single chemical fragment
@@ -13,6 +13,7 @@
 #' @param ... arguments from the fmcsR::fmcbatch such as a and b
 #' @return A list containing tanimoto coefficient for the closest matching MCS, SMILES string of the MCS, and index nuber of the matched fragment from the library.
 #'
+#' @export
 #' @examples
 #' htdesc (smile = "CCC", HT.type = "taft", sigma.selection = "A")
 #'

@@ -1,18 +1,28 @@
-#' Title Batch search and fill of sigma values for matching or highest matching by tanimoto coefficient chemical fragments from curated library
+#' Batch search and match of fragment sigma values
 #'
-#' @param file csv with columns of specific titles and filled with fragment smiles
+#'
+#' Get values of Hammett-Taft descriptors for a given chemical fragment in SMILES string format by iterating through a lookup table. In case an exact match isnt found, this function uses a mismatch tolerant
+#' maximum common substructure (fMCS) based fragment substitution library to get the HT dexcriptors with highest tanimoto coefficient. This function iterates through a loop to complete a batch file of sigma
+#' values.
+#'
+#' @usage htbatch(file, sigma.selection = "A", ...)
+#'
+#'
+#' @param file path to csv file
 #' @param sigma.selection The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", "H", and "U"
-#' @param ...
+#' @param ... inherit arguments
 #'
-#' @returnA list containing tanimoto coefficient for the closest matching MCS, SMILES string of the MCS, and index nuber of the matched fragment from the library.
+#' @return Filled dataframe columns resulting from similarity search and value extraction from
+#' esSDF, indSDF, metaSDF, paraSDF, orthoSDF, taftSDF, userSDF
+#'
 #' @export
 #'
-#' @examples
-htbatch <- function (file, sigma.selection, ...) {
+#' @examples ## NOT RUN: htbatch("./inst/extdata/acidester.csv", sigma.selection ="A")
+htbatch <- function (file, sigma.selection = "A", ...) {
 
   #reading the csv file as a dataframe
 
-  qsardataframe <- read.csv(file, stringsAsFactors = TRUE,na.strings = "", encoding = "UTF-8")
+  qsardataframe <- utils::read.csv(file, stringsAsFactors = TRUE,na.strings = "", encoding = "UTF-8")
 
 
   # colnames(qsardataframe)[colnames(qsardataframe)=="ï..no"] <- "no"
