@@ -1,0 +1,68 @@
+---
+title: "HTdescR"
+author: "Jay Patel"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{HTdescR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette documents how to use the HTdescR package.
+
+## Data: carboxylicacidesterinputfile-fixed.csv
+To properly illustrate HTdescR functions besides htdesc we will use this data file.  This file is composed of 72 specific columns.  For new files a template can be found as a .csv or a .rda.
+
+## Function list
+* htdesc() returns specified sigma value for a fragment.
+* htbatch() returns batch input sigma values neatly arranged.
+* helper() exists to help htbatch() execute faster.
+* cleanframe() replaces NA with zero and returns experimental value column and descriptor columns in dataframe.
+* runmodels() returns rate constant prediction given chemical and specified model.
+
+### Find fragment sigma values with htdesc()
+htdesc() allows you to see the specified sigma value of a fragment or its closest neighbor in similarity. The first argument is the chemical's fragment SMILES (contains a * where it attaches to the main body of the chemcial). The second argument is the HT.type which refers to what sigma value you would like returned.  HT stands for Hammett Taft and the types of sigma value are specifed in the figure below (don't forget to link figure).  The third argument is the style of sigma selection (avg, hansch preferred, median, etc...).
+
+For example, we can find out the value a methyl value has when placed in the "taft" position and with reg.average selected, sigma.selection "A" method by
+
+`htdesc(smile = "C*", HT.type = "taft", sigma.selection = "A")`
+
+Note: This function doesn't use the data file specified above
+
+### Batch fragment search, substitution, value filling with htbatch()
+htbatch() employs htdesc() and helper() in a loop to search for a chemical's SMILES fragment.  The important task that htbatch() carries out is filling the columns allowing a user to see the similarity of a matched fragment, index number, and sigma value. The first argument is a file in the form of a .csv. The second argument is what form of sigma selection should be used.
+
+For example we can use the data file specified above to run htbatch()
+
+`qsardataframe <- htbatch(".\carboxylicacidesterinputfile-fixed.csv", sigma.selection = "A")`
+
+### Expedited phenyl fragment information return helper()
+helper() is solely to help htbatch() return phenyl fragment values without searching the full library.  helper() is not meant to be run as a standalone function. 
+
+### Condense dataframe to modeling parameters and replace replace NAs with cleanframe()
+cleanframe() removes columns that are not important in modeling and leaves the user with a neatly organized dataframe of experimental values and descriptor values. The first and only argument is the dataframe that was returned from htbatch()
+
+`cleanframe(qsardataframe)`
+
+### Receive predictions for chemicals runmodels()
+runQSAR() provides the user with the rate constant predictions based on the machine learning model that is selected. These models are based off of our trainging set and test set (n=56, n=14 respectively).  The first argument is 
+
+## Linear functionality
+Most of these functions serve each other in a linear sense.  htbatch()->cleanframe()->runmodels() is the most powerful implementation of this package.  The power of this package comes from the Hammett Taft libraries and the ability to run batch files.
+
+## Saving results
+Functions inside of HTdescR require the user to save each function call systematically.
+Because some functions make sweeping changes by adding and condensing, this feature is a preferred method to retain original data. 
+For clairty the process described is
+```
+htbatchframe <- htbatch(qsardataframe, sigma.selection = "A")
+cleanedqsarframe <- cleanframe(htbatchframe)
+```
