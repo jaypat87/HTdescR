@@ -1,9 +1,9 @@
 #Random Split for Training and Test Sets
 
-dataacidester <- read.csv("./inst/extdata/dataacidester.csv")
+dataacidester <- read.csv("./data/dataacidester.csv")
 dataacidester <- dataacidester[c(2:8)]
 moddata <- dataacidester
-moddata <- dplyr::rename(moddata, rate = log.rate.exp)
+colnames(moddata)[1] <- "rate"
 moddata <- dplyr::mutate(moddata, log.rate.exp = log10(rate))
 moddata <- moddata[c(8,2:3,5:7)]
 
@@ -192,10 +192,9 @@ for(i in 1:14){
 #
 
 ADTrain <- ADTrainSet[c(3:8)]
-htdescHelper <- read.csv(file = "./inst/extdata/htdescHelper.csv", stringsAsFactors = FALSE)
-htdescHelper <- htdescHelper[c(2:8)]
-#Store allmodels
 
+#Store allmodels
+htdescHelper <- read.csv("./data/htdescHelper.csv")
 devtools::use_data(dataacidester, TrainEqMLR, TrainEqPLS, TrainEqRF, TrainEqSVR,
                    htdescHelper, TestSet, TrainingSet, P95, ADTestSet, ADTrain,
                    internal = TRUE, overwrite = TRUE)

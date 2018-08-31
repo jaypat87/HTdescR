@@ -17,7 +17,7 @@
 #'
 #' @export
 #'
-#' @examples ## NOT RUN: htbatch("./inst/extdata/acidester.csv", sigma.selection ="A")
+#' @examples ## NOT RUN: htbatch("./data/dataacidester.csv", sigma.selection ="A")
 htbatch <- function (file, sigma.selection = "A", ...) {
 
   #reading the csv file as a dataframe
