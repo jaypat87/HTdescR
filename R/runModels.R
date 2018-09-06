@@ -1,4 +1,15 @@
-
+#' Chemical prediction value generator
+#'
+#' R function that generates predictions for chemicals based on the machine learning method selected.
+#'
+#' @param data chemical descriptor data frame
+#' @param method The model from which the prediction should be generated.
+#'
+#' @return a data frame containing indeces, rate constant prediction, applicability domain info, and descriptors
+#' @export
+#'
+#' @examples ##NOT RUN:runModel (dataacidester, method = "SVR")
+#'
 runModel <- function(data, method){
 
   n <- nrow(data)

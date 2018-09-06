@@ -9,7 +9,7 @@ htdesc(smile, HT.type = "taft", sigma.selection = "A", ...)
 \arguments{
 \item{smile}{SMILES string for a chemical fragment in character, factor, or SMIset datatype.}
 
-\item{HT.type}{The type of Hammett-Taft (HT) descriptor; valid inputs include "taft", "meta", "para", "ortho", "induction", "es" and "user" for a user defined sigma descriptor.}
+\item{HT.type}{The type of Hammett-Taft (HT) descriptor; valid inputs include "taft", "meta", "para", "ortho", "inductive", "es" and "user" for a user defined sigma descriptor.}
 
 \item{sigma.selection}{The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", "H", and "U"}
 
