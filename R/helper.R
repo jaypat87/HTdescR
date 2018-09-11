@@ -9,7 +9,7 @@
 #' @return values from library that is inserted directly into qsardataframe.
 #'
 helper <- function(type, sigma.select){
-  hfilter <- dplyr::filter(htdescHelper, HT.type == type, sigma.selection == Sigma.select)
+  hfilter <- dplyr::filter(htdescHelper, HT.type == type, sigma.selection == sigma.select)
   return(hfilter)
   }
 
