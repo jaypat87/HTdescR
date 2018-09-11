@@ -13,7 +13,7 @@
 runModel <- function(data, method){
 
   n <- nrow(data)
-  PREDset <- data[c(2:6)]   #Prep data for use - only descriptors
+  PREDset <- data[c(2:3,5:7)]   #Prep data for use - only descriptors
   ADset <- dplyr::mutate(PREDset, index = seq_len(n))
   SetAppDom <- data.frame(Index=numeric(), AD=character(), ADLevel=numeric())
   predictionsDF <- data.frame()
@@ -22,29 +22,29 @@ runModel <- function(data, method){
     SVRpredictions <- stats::predict(TrainEqSVR, newdata = PREDset)
     PredictedRateSVR <- as.data.frame(SVRpredictions)
     SVRout <- dplyr::bind_cols(data, PredictedRateSVR)
-    predictionsDF <- as.data.frame(SVRout[c(1,7,2:6)])
+    predictionsDF <- as.data.frame(SVRout[c(1,8,2:3,5:7)])
 
 
   } else if (method == "MLR"){
     MLRpredictions <- stats::predict(TrainEqMLR, newdata = PREDset)
     PredictedRateMLR <- as.data.frame(MLRpredictions)
-    MLRout <- bind_cols(data, PredictedRateMLR)
-    predictionsDF <- as.data.frame(MLRout[c(1,7,2:6)])
+    MLRout <- dplyr::bind_cols(data, PredictedRateMLR)
+    predictionsDF <- as.data.frame(MLRout[c(1,8,2:3,5:7)])
 
 
   } else if (method == "RF"){
     RFpredictions <- stats::predict(TrainEqRF, newdata = PREDset)
     PredictedRateRF <- as.data.frame(RFpredictions)
-    RFout <- bind_cols(data, PredictedRateRF)
-    predictionsDF <- as.data.frame(RFout[c(1,7,2:6)])
+    RFout <- dplyr::bind_cols(data, PredictedRateRF)
+    predictionsDF <- as.data.frame(RFout[c(1,8,2:3,5:7)])
 
 
   } else if (method == "PLS"){
     PLSpredictions <- stats::predict(TrainEqPLS, newdata = PREDset)
     PLSpredictions <- as.data.frame(PLSpredictions)
     PredictedRatePLS <- PLSpredictions$`log.rate.exp.3 comps`
-    PLSout <- bind_cols(data, as.data.frame(PredictedRatePLS))
-    predictionsDF <- as.data.frame(PLSout[c(1,7,2:6)])
+    PLSout <- dplyr::bind_cols(data, as.data.frame(PredictedRatePLS))
+    predictionsDF <- as.data.frame(PLSout[c(1,8,2:3,5:7)])
 
 
   } else {
@@ -73,7 +73,7 @@ runModel <- function(data, method){
   Indeces <- SetAppDom[1]
   predicted <- predictionsDF[c(1:2)]
   desc <- predictionsDF[c(3:7)]
-  Predictions <- bind_cols(Indeces, predicted, AppDomInfo, desc)
+  Predictions <- dplyr::bind_cols(Indeces, predicted, AppDomInfo, desc)
   return(Predictions)
 }
 
