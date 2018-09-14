@@ -9,7 +9,17 @@
 #'
 #' @param smile SMILES string for a chemical fragment in character, factor, or SMIset datatype.
 #' @param HT.type The type of Hammett-Taft (HT) descriptor; valid inputs include "taft", "meta", "para", "ortho", "inductive", "es" and "user" for a user defined sigma descriptor.
-#' @param sigma.selection The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", "H", and "U"
+#' @param sigma.selection The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", and "H"
+#' A = Avgerage value
+#' B = Hansch preferred value if available then EPIsuite value if available then Average value
+#' C = EPIsuite value if available then Hansch preferred value if available then Average of distinct values
+#' D = EPIsuite value if available then Average of distinct value
+#' E = Hansch preferred value if available then Average of distinct value
+#' F = Hansch preferred value if available then mode value if available then median value
+#' G = EPIsuite value if available then Hansch preferred value if available then median value
+#' H = Mode if available then Average of distinct value
+#' Avg.dist = Average of Distinct value
+#' Med = Median Value
 #' @param ... arguments from the fmcsR::fmcbatch such as a and b
 #' @return A list containing tanimoto coefficient for the closest matching MCS, SMILES string of the MCS, and index nuber of the matched fragment from the library.
 #'
@@ -149,10 +159,20 @@ htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
           returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$avg.dist[1])
           return(returnlist)
       }
-  } else if (sigma.selection == "U") {
-    # user created sigma selection
-    stop ("user has not created a custom sigma values option")
-    } else {
+  } else if (sigma.selection == "Avg.dist") {
+    #Avg.dist:  average of distinct
+    if (is.na(fmcsoutputframe$reg.mode[1]) == FALSE) {
+      returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$avg.dist[1])
+      return(returnlist)
+    }
+  } else if (sigma.selection == "Med") {
+    #Med:  Median
+    if (is.na(fmcsoutputframe$reg.mode[1]) == FALSE) {
+      returnlist <- list (tanimoto = fmcsoutputframe$Tanimoto_Coefficient[1], index = fmcsoutputframe$index[1], sub = as.character(fmcsoutputframe$fragments[1]), value = fmcsoutputframe$avg.dist[1])
+      return(returnlist)
+    }
+  }
+    else {
       stop ("Specify valid sigma.selection")
     }
 }
