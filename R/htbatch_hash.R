@@ -5,7 +5,7 @@
 #' maximum common substructure (fMCS) based fragment substitution library to get the HT dexcriptors with highest tanimoto coefficient. This function iterates through a loop to complete a batch file of sigma
 #' values.
 #'
-#' @usage htbatch(file, sigma.selection = "A", ...)
+#' @usage htbatch_hash(file, sigma.selection = "A", ...)
 #'
 #'
 #' @param file path to csv file
@@ -18,14 +18,18 @@
 #' @export
 #'
 #' @examples ## NOT RUN: htbatch("./data/dataacidester.csv", sigma.selection ="A")
-htbatch <- function (file2, sigma.selection = "A", ...) {
+htbatch_hash <- function (file, sigma.selection = "A", ...) {
+
+  # create an empty hash table
+
+  hash_taft <- hash::hash()
 
   #reading the csv file as a dataframe
 
-  #qsardataframe <- utils::read.csv(file, stringsAsFactors = TRUE,na.strings = "", encoding = "UTF-8")
-  qsardataframe = file2
+  qsardataframe <- utils::read.csv(file, stringsAsFactors = TRUE,na.strings = "", encoding = "UTF-8")
 
-  # colnames(qsardataframe)[colnames(qsardataframe)=="X.U.FEFF.no"] <- "no"
+
+  # colnames(qsardataframe)[colnames(qsardataframe)=="ï..no"] <- "no"
 
   # initializing the iterator
 
@@ -36,12 +40,25 @@ htbatch <- function (file2, sigma.selection = "A", ...) {
 
     if (is.na(qsardataframe$r1.meta1.smiles[i]) & is.na(qsardataframe$r1.ortho1.smiles[i]) & is.na(qsardataframe$r1.para1.smiles[i]) == TRUE) {
 
+      if (hash::has.key(qsardataframe$r1.taft.smiles[i]) == TRUE) {
+
+        t <- hash_taft[[qsardataframe$r1.taft.smiles[i]]]
+        qsardataframe$r1.taft.sub.smiles[i] <- as.character (t$sub)
+        qsardataframe$r1.taft.mcs.index[i] <- t$tanimoto
+        qsardataframe$r1.taft.value[i] <- t$value
+        rm (t)
+
+      } else {
+
       t <- htdesc (smile = qsardataframe$r1.taft.smiles[i], HT.type = "taft", sigma.selection)
+
+      hash_taft[[qsardataframe$r1.taft.smiles[i]]] = t
+
       qsardataframe$r1.taft.sub.smiles[i] <- as.character (t$sub)
       qsardataframe$r1.taft.mcs.index[i] <- t$tanimoto
       qsardataframe$r1.taft.value[i] <- t$value
       rm (t)
-
+      }
 
       if (is.na(qsardataframe$r1.ind.smiles[i]) == FALSE) {
 
