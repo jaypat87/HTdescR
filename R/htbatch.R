@@ -18,12 +18,12 @@
 #' @export
 #'
 #' @examples ## NOT RUN: htbatch("./data/dataacidester.csv", sigma.selection ="A")
-htbatch <- function (file2, sigma.selection = "A", ...) {
+htbatch <- function (file, sigma.selection = "A", ...) {
 
   #reading the csv file as a dataframe
 
-  #qsardataframe <- utils::read.csv(file, stringsAsFactors = TRUE,na.strings = "", encoding = "UTF-8")
-  qsardataframe = file2
+  qsardataframe <- utils::read.csv(file, stringsAsFactors = FALSE,na.strings = "", encoding = "UTF-8")
+
 
   # colnames(qsardataframe)[colnames(qsardataframe)=="X.U.FEFF.no"] <- "no"
 

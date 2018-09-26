@@ -26,7 +26,7 @@ htbatch_hash <- function (file, sigma.selection = "A", ...) {
 
   #reading the csv file as a dataframe
 
-  qsardataframe <- utils::read.csv(file, stringsAsFactors = TRUE,na.strings = "", encoding = "UTF-8")
+  qsardataframe <- utils::read.csv(file, stringsAsFactors = FALSE,na.strings = "", encoding = "UTF-8")
 
 
   # colnames(qsardataframe)[colnames(qsardataframe)=="ï..no"] <- "no"
@@ -40,7 +40,7 @@ htbatch_hash <- function (file, sigma.selection = "A", ...) {
 
     if (is.na(qsardataframe$r1.meta1.smiles[i]) & is.na(qsardataframe$r1.ortho1.smiles[i]) & is.na(qsardataframe$r1.para1.smiles[i]) == TRUE) {
 
-      if (hash::has.key(qsardataframe$r1.taft.smiles[i]) == TRUE) {
+      if (hash::has.key(qsardataframe$r1.taft.smiles[i], hash_taft) == TRUE) {
 
         t <- hash_taft[[qsardataframe$r1.taft.smiles[i]]]
         qsardataframe$r1.taft.sub.smiles[i] <- as.character (t$sub)
@@ -162,14 +162,27 @@ htbatch_hash <- function (file, sigma.selection = "A", ...) {
 
     if (is.na(qsardataframe$r2.meta1.smiles[i]) & is.na(qsardataframe$r2.ortho1.smiles[i]) & is.na(qsardataframe$r2.para1.smiles[i]) == TRUE) {
 
+      if (hash::has.key(qsardataframe$r2.taft.smiles[i], hash_taft) == TRUE) {
+
+        t <- hash_taft[[qsardataframe$r2.taft.smiles[i]]]
+        qsardataframe$r2.taft.sub.smiles[i] <- as.character (t$sub)
+        qsardataframe$r2.taft.mcs.index[i] <- t$tanimoto
+        qsardataframe$r2.taft.value[i] <- t$value
+        rm (t)
+
+      } else {
+
       # calling htdesc to fill substitute mcs values
 
       t <- htdesc (smile = qsardataframe$r2.taft.smiles[i], HT.type = "taft", sigma.selection)
+
+      hash_taft[[qsardataframe$r1.taft.smiles[i]]] = t
+
       qsardataframe$r2.taft.sub.smiles[i] <- as.character (t$sub)
       qsardataframe$r2.taft.mcs.index[i] <- t$tanimoto
       qsardataframe$r2.taft.value[i] <- t$value
       rm(t)
-
+      }
 
       if (is.na(qsardataframe$r2.ind.smiles[i]) == FALSE) {
 
