@@ -1,8 +1,8 @@
-htbatch <- function (file, sigma.selection, ...) {
+htbatch <- function (file, sigma.selection = "A", ...) {
 
   #reading the csv file as a dataframe
 
-  qsardataframe <- read.csv(file, stringsAsFactors = TRUE,na.strings = "", encoding = "UTF-8")
+  qsardataframe <- read.csv(file, stringsAsFactors = FALSE,na.strings = "", encoding = "UTF-8")
 
 
   # colnames(qsardataframe)[colnames(qsardataframe)=="ï..no"] <- "no"
