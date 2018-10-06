@@ -19,6 +19,7 @@ biocViews: Cheminformatics
 Imports: RUnit, methods, ChemmineR, ChemmineOB, BiocGenerics, parallel,
     fmcsR,
     e1071,
+    hash,
     pls,
     randomForest,
     stats,

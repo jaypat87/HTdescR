@@ -22,10 +22,10 @@ htbatch <- function (file, sigma.selection = "A", ...) {
 
   #reading the csv file as a dataframe
 
-  qsardataframe <- utils::read.csv(file, stringsAsFactors = TRUE,na.strings = "", encoding = "UTF-8")
+  qsardataframe <- utils::read.csv(file, stringsAsFactors = FALSE,na.strings = "", encoding = "UTF-8")
 
 
-  # colnames(qsardataframe)[colnames(qsardataframe)=="ï..no"] <- "no"
+  # colnames(qsardataframe)[colnames(qsardataframe)=="X.U.FEFF.no"] <- "no"
 
   # initializing the iterator
 
