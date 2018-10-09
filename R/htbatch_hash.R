@@ -66,7 +66,7 @@ htbatch_hash <- function (file, sigma.selection = "A", ...) {
 
         t <- hash_taft[[taftsmiles1]]
         qsardataframe$r1.taft.sub.smiles[i] <- as.character (t$sub)
-        qsardataframe$r1.taft.mcs.index[i] <- t$index
+        qsardataframe$r1.taft.mcs.index[i] <- t$tanimoto
         qsardataframe$r1.taft.value[i] <- t$value
         rm (t)
 
@@ -86,7 +86,7 @@ htbatch_hash <- function (file, sigma.selection = "A", ...) {
 
         t <- hash_ind[[indsmiles1]]
         qsardataframe$r1.ind.sub.smiles[i] <- as.character (t$sub)
-        qsardataframe$r1.ind.mcs.index[i] <- t$index
+        qsardataframe$r1.ind.mcs.index[i] <- t$tanimoto
         qsardataframe$r1.ind.value[i] <- t$value
         rm (t)
 
@@ -109,7 +109,7 @@ htbatch_hash <- function (file, sigma.selection = "A", ...) {
 
         t <- hash_es[[essmiles1]]
         qsardataframe$r1.es.sub.smiles[i] <- as.character (t$sub)
-        qsardataframe$r1.es.mcs.index[i] <- t$index
+        qsardataframe$r1.es.mcs.index[i] <- t$tanimoto
         qsardataframe$r1.es.value[i] <- t$value
         rm (t)
 
