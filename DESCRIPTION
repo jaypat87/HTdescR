@@ -16,7 +16,7 @@ LazyData: true
 LazyLoad: yes
 URL: http://jaympatel.com
 biocViews: Cheminformatics
-Imports: RUnit, methods, ChemmineR, ChemmineOB, BiocGenerics, parallel,
+Imports: BiocInstaller, RUnit, methods, ChemmineR, ChemmineOB, BiocGenerics, parallel,
     fmcsR,
     e1071,
     hash,
