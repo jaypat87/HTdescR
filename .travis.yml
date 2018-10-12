@@ -1,4 +1,5 @@
 language: r
+bioc_packages: BiocInstaller, ChemmineR, ChemmineOB, BiocGenerics, fmcsR
 cache: packages
 
 
