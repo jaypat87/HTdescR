@@ -1,7 +1,7 @@
 language: r
 sudo: true
 dist: trusty
-install:
+before_install:
   - sudo apt-get --yes install snapd
   - sudo snap install openbabel
 
