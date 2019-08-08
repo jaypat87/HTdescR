@@ -56,7 +56,7 @@ SVRtestRMSE <- sqrt(meanSVRresidualsTest2$`mean(SVRresidualsTest2$sumTestSVR.res
 
 #All together
 
-dataRange <- range(moddata$log.rate.exp)
+dataRange <- range(moddata3$log.rate.exp)
 Range <- abs(dataRange[1]) + dataRange[2]
 RMSEthreshold <- Range / 10
 
