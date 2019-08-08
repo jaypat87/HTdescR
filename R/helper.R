@@ -1,4 +1,4 @@
-#' Expidited search for phenyl fragment sigma values
+#' Expedited search for phenyl fragment sigma values
 #'
 #' This function is for returning values for the phenyl fragment without running htdesc.
 #' @usage helper(type, sigma.select)
