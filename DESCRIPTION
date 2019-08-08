@@ -16,16 +16,9 @@ LazyData: true
 LazyLoad: yes
 URL: http://jaympatel.com
 biocViews: Cheminformatics
-Imports: BiocInstaller, RUnit, methods, ChemmineR, ChemmineOB, BiocGenerics, parallel,
-    fmcsR,
-    e1071,
-    hash,
-    pls,
-    randomForest,
-    stats,
-    tidyr,
-    utils,
-    dplyr,
-    FNN
+Imports: utils, dplyr, tidyr, caTools, stats, pls, randomForest, e1071, FNN, tibble, devtools,
+    BiocInstaller, ChemmineR, ChemmineOB, BiocGenerics,
+    RUnit, methods, parallel,
+    fmcsR, hash
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
