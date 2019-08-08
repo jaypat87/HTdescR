@@ -1,3 +1,18 @@
+#HTdescR libraries
+
+library(utils)
+library(dplyr)
+library(tidyr)
+library(caTools)
+library(stats)
+library(pls)
+library(randomForest)
+library(e1071)
+library(FNN)
+library(tibble)
+library(devtools)
+
+
 #Random Split for Training and Test Sets
 
 dataacidester <- read.csv("./data/dataacidester.csv") #Import data file
@@ -5,27 +20,26 @@ dataacidester <- dataacidester[c(2:8)] #Trim index numbers from data frame
 moddata <- dataacidester
 colnames(moddata)[1] <- "rate" #Renaming rate column
 moddata <- dplyr::mutate(moddata, log.rate.exp = log10(rate)) #Making a column of log rates
-moddata <- moddata[c(8,2:3,5:7)] #Sorting columns of rate and descriptors to make sense visually
-moddata <- dplyr::slice(moddata, c(1:22,28:70)) #Cutting out outliers for testing
+moddata <- moddata[c(8,2:3,5:7)] #Sorting columns of rate and descriptors to make sense visually, getting rid of R1 Hammet and non-log rates
+moddata <- dplyr::slice(moddata, c(1:22,28:70)) #Cutting out 5 outliers for testing
+
 
 # EFSA conversionns
 
-EFSACAE2 <- EFSACAE[c(5, 55, 56, 64, 65, 72)]
-EFSACAE3 <- slice(EFSACAE2, 5:9)
-EFSACAE4 <- mutate_at(EFSACAE3, vars(log.rate.exp), funs(log(., 10)))
+##insert code here in read in EFSACAEsecondOrder to EFSACAE
+EFSACAE2 <- EFSACAE[c(5, 55, 56, 64, 65, 72)] #Cuts EFSACAE down to the columns (sorted, but log.rate.exp is NOT in log -- it is still in rate) that moddata has
+EFSACAE3 <- dplyr::slice(EFSACAE2, 5:9) #Cuts out unusable EFSACAE data to just the 5 usable compounds
+EFSACAE4 <- dplyr::mutate_at(EFSACAE3, vars(log.rate.exp), funs(log(., 10))) #Converts log.rate.exp rate values to actually be log values
 
-moddata2 <- bind_rows(moddata, EFSACAE4)
-moddata3 <- tidyr::replace_na(moddata2, list(r2.hammett.value = 0))
-
-moddata <- moddata3
-
+moddata2 <- dplyr::bind_rows(moddata, EFSACAE4) #Add previous data and EFSA data to get 70 total compounds
+moddata3 <- tidyr::replace_na(moddata2, list(r2.hammett.value = 0)) #Replaced the EFSA compounds' N/As in the R2 Hammett column with 0s
 
 
 
 set.seed(529) #Setting seed for Train/Test splitting
-sample <- caTools::sample.split(moddata$log.rate.exp, SplitRatio = 0.8) #Random splitting into Training and Test Sets
-moddataTrain <- subset(moddata, sample == TRUE) #Saving the Training Set
-moddataTest <- subset(moddata, sample == FALSE) #Saving the Test Set
+sample <- caTools::sample.split(moddata3$log.rate.exp, SplitRatio = 0.8) #Random splitting into Training and Test Sets
+moddataTrain <- subset(moddata3, sample == TRUE) #Saving the Training Set
+moddataTest <- subset(moddata3, sample == FALSE) #Saving the Test Set
 
 TrainingSet <- moddataTrain #Saving sets with new names
 TestSet <- moddataTest
@@ -33,6 +47,11 @@ TrainingDesc <- TrainingSet[c(2:6)] #Making data frames with only the descriptor
 TestDesc <- TestSet[c(2:6)]
 MTrain <- moddataTrain$log.rate.exp #Saving data frames with only the experimental rates for the Training and Test Sets
 MTest <- moddataTest$log.rate.exp
+
+
+
+
+
 
 
 #MLR model
@@ -44,14 +63,6 @@ sumTrainMLR <- summary(Trainr2MLR)
 multR2MLR <- as.numeric(sumTrainMLR[8]) #Grabbing mult. R2 for this model
 adjR2MLR <- as.numeric(sumTrainMLR[9]) #Grabbing adj. R2 for this model
 ResStErrMLR <- as.numeric(sumTrainMLR[6]) #Grabbing residual standard error for this model
-
-#Old code for manually calculating R2
-#TotalMLR <- dplyr::bind_cols(as.data.frame(TrainYMLR), TrainingSet)
-#TotalMLR <- dplyr::mutate(TotalMLR, SE = (log.rate.exp - TrainYMLR)^2)
-#TotalMLR <- dplyr::mutate(TotalMLR, SSE = sum(SE))
-#TotalMLR <- dplyr::mutate(TotalMLR, meanmeas = mean(log.rate.exp))
-#TotalMLR <- dplyr::mutate(TotalMLR, ST = (log.rate.exp - meanmeas)^2)
-#TotalMLR <- dplyr::mutate(TotalMLR, SST = sum(ST))
 
 #Getting Test R2 through manual calculation
 TestYMLR <- stats::predict(TrainEqMLR, newdata = TestDesc) #Using the model to predict the Test Set
@@ -66,12 +77,22 @@ TestMLR <- dplyr::mutate(TestMLR, SST = sum(ST))
 TestMLR <- dplyr::mutate(TestMLR, Q2 = (1-(PRESS/SST)))
 MLRtestR2 <- TestMLR$Q2[1]
 
-#Getting Test R2 by regression (same way as Training R2) for comparison purposes
-#Testr2MLR <- stats::lm(TestYMLR ~ MTest)
-#sumTestMLR <- summary(Testr2MLR)
-#TestMultR2MLR <- as.numeric(sumTestMLR[8])
-#TestAdjR2MLR <- as.numeric(sumTestMLR[9])
-#TestRSEMLR <- as.numeric(sumTestMLR[6])
+
+#MLR RMSE
+
+MLRresiduals <- as.data.frame(sumTrainMLR$residuals)
+MLRresiduals2 <- data.frame(MLRresiduals^2)
+meanMLRresiduals2 <- dplyr::mutate(MLRresiduals2, mean(MLRresiduals2$sumTrainMLR.residuals))
+MLRtrainRMSE <- sqrt(meanMLRresiduals2$`mean(MLRresiduals2$sumTrainMLR.residuals)`[1])
+
+MLRresidualsTest <- as.data.frame(sumTestMLR$residuals)
+MLRresidualsTest2 <- data.frame(MLRresidualsTest^2)
+meanMLRresidualsTest2 <- dplyr::mutate(MLRresidualsTest2, mean(MLRresidualsTest2$sumTestMLR.residuals))
+MLRtestRMSE <- sqrt(meanMLRresidualsTest2$`mean(MLRresidualsTest2$sumTestMLR.residuals`[1])
+
+
+
+
 
 
 
@@ -87,13 +108,6 @@ multR2PLS <- as.numeric(sumTrainPLS[8]) #Grabbing the mult. R2 for this model
 adjR2PLS <- as.numeric(sumTrainPLS[9]) #Grabbing the adj. R2 for this model
 ResStErrPLS <- as.numeric(sumTrainPLS[6]) #Grabbing the residual standard error for this model
 
-#Old code for manually calculating R2
-#TotalPLS <- dplyr::bind_cols(as.data.frame(TrainYPLS), TrainingSet)
-#TotalPLS <- dplyr::mutate(TotalPLS, SE = (log.rate.exp - TrainYPLS)^2)
-#TotalPLS <- dplyr::mutate(TotalPLS, SSE = sum(SE))
-#TotalPLS <- dplyr::mutate(TotalPLS, meanmeas = mean(log.rate.exp))
-#TotalPLS <- dplyr::mutate(TotalPLS, ST = (log.rate.exp - meanmeas)^2)
-#TotalPLS <- dplyr::mutate(TotalPLS, SST = sum(ST))
 
 #Getting Test R2 through manual calculation
 PLSTestPred <- stats::predict(TrainEqPLS, newdata = TestDesc) #Using the model to predict the Test Set
@@ -112,6 +126,25 @@ PLStestR2 <- TestPLS$Q2[1]
 
 
 
+#PLS RMSE
+
+PLSresiduals <- as.data.frame(sumTrainPLS$residuals)
+PLSresiduals2 <- data.frame(PLSresiduals^2)
+meanPLSresiduals2 <- dplyr::mutate(PLSresiduals2, mean(PLSresiduals2$sumTrainPLS.residuals))
+PLStrainRMSE <- sqrt(meanPLSresiduals2$`mean(PLSresiduals2$sumTrainPLS.residuals)`[1])
+
+PLSresidualsTest <- as.data.frame(sumTestPLS$residuals)
+PLSresidualsTest2 <- data.frame(PLSresidualsTest^2)
+meanPLSresidualsTest2 <- dplyr::mutate(PLSresidualsTest2, mean(PLSresidualsTest2$sumTestPLS.residuals))
+PLStestRMSE <- sqrt(meanPLSresidualsTest2$`mean(PLSresidualsTest2$sumTestPLS.residuals`[1])
+
+
+
+
+
+
+
+
 #RF model
 
 TrainEqRF <- randomForest::randomForest(log.rate.exp~., data = TrainingSet, ntree = 500, nodesize = 5,
@@ -123,13 +156,6 @@ multR2RF <- as.numeric(sumTrainRF[8]) #Grabbing the mult. R2 for this model
 adjR2RF <- as.numeric(sumTrainRF[9]) #Grabbing the adj. R2 for this model
 ResStErrRF <- as.numeric(sumTrainRF[6]) #Grabbing the residual standard error for this model
 
-#Old code for manually calculating R2
-#TotalRF <- dplyr::bind_cols(as.data.frame(TrainYRF), TrainingSet)
-#TotalRF <- dplyr::mutate(TotalRF, SE = (log.rate.exp - TrainYRF)^2)
-#TotalRF <- dplyr::mutate(TotalRF, SSE = sum(SE))
-#TotalRF <- dplyr::mutate(TotalRF, meanmeas = mean(log.rate.exp))
-#TotalRF <- dplyr::mutate(TotalRF, ST = (log.rate.exp - meanmeas)^2)
-#TotalRF <- dplyr::mutate(TotalRF, SST = sum(ST))
 
 #Getting Test R2 through manual calculation
 TestYRF <- stats::predict(TrainEqRF, newdata = TestDesc) #Using the model to predict the Test Set
@@ -146,6 +172,24 @@ RFtestR2 <- TestRF$Q2[1]
 
 
 
+#RF RMSE
+
+RFresiduals <- as.data.frame(sumTrainRF$residuals)
+RFresiduals2 <- data.frame(RFresiduals^2)
+meanRFresiduals2 <- dplyr::mutate(RFresiduals2, mean(RFresiduals2$sumTrainRF.residuals))
+RFtrainRMSE <- sqrt(meanRFresiduals2$`mean(RFresiduals2$sumTrainRF.residuals)`[1])
+
+RFresidualsTest <- as.data.frame(sumTestRF$residuals)
+RFresidualsTest2 <- data.frame(RFresidualsTest^2)
+meanRFresidualsTest2 <- dplyr::mutate(RFresidualsTest2, mean(RFresidualsTest2$sumTestRF.residuals))
+RFtestRMSE <- sqrt(meanRFresidualsTest2$`mean(RFresidualsTest2$sumTestRF.residuals`[1])
+
+
+
+
+
+
+
 #SVR model
 
 TrainEqSVR <- e1071::svm(log.rate.exp~., data = TrainingSet, cost = 75.5, epsilon = 0.033, gamma = 0.9970) #Training the SVR model on the Training Set
@@ -156,13 +200,7 @@ multR2SVR <- as.numeric(sumTrainSVR[8]) #Grabbing the mult. R2 for this model
 adjR2SVR <- as.numeric(sumTrainSVR[9]) #Grabbing the adj. R2 for this model
 ResStErrSVR <- as.numeric(sumTrainSVR[6]) #Grabbing the residual standard error for this model
 
-#Old code for manually calculating R2
-#TotalSVR <- dplyr::bind_cols(as.data.frame(TrainYSVR), TrainingSet)
-#TotalSVR <- dplyr::mutate(TotalSVR, SE = (log.rate.exp - TrainYSVR)^2)
-#TotalSVR <- dplyr::mutate(TotalSVR, SSE = sum(SE))
-#TotalSVR <- dplyr::mutate(TotalSVR, meanmeas = mean(log.rate.exp))
-#TotalSVR <- dplyr::mutate(TotalSVR, ST = (log.rate.exp - meanmeas)^2)
-#TotalSVR <- dplyr::mutate(TotalSVR, SST = sum(ST))
+
 
 #Getting Test R2 through manual calculation
 TestYSVR <- stats::predict(TrainEqSVR, newdata = TestDesc) #Using the model to predict the Test Set
@@ -178,6 +216,21 @@ TestSVR <- dplyr::mutate(TestSVR, Q2 = (1-(PRESS/SST)))
 SVRtestR2 <- TestSVR$Q2[1]
 
 
+#SVR RMSE
+
+SVRresiduals <- as.data.frame(sumTrainSVR$residuals)
+SVRresiduals2 <- data.frame(SVRresiduals^2)
+meanSVRresiduals2 <- dplyr::mutate(SVRresiduals2, mean(SVRresiduals2$sumTrainSVR.residuals))
+SVRtrainRMSE <- sqrt(meanSVRresiduals2$`mean(SVRresiduals2$sumTrainSVR.residuals)`[1])
+
+SVRresidualsTest <- as.data.frame(sumTestSVR$residuals)
+SVRresidualsTest2 <- data.frame(SVRresidualsTest^2)
+meanSVRresidualsTest2 <- dplyr::mutate(SVRresidualsTest2, mean(SVRresidualsTest2$sumTestSVR.residuals))
+SVRtestRMSE <- sqrt(meanSVRresidualsTest2$`mean(SVRresidualsTest2$sumTestSVR.residuals`[1])
+
+
+
+
 
 
 #Compare all R2
@@ -186,6 +239,17 @@ allTrainMultR2 <- data.frame(multR2MLR, multR2PLS, multR2RF, multR2SVR) #Pasting
 allTrainAdjR2 <- data.frame(adjR2MLR, adjR2PLS, adjR2RF, adjR2SVR)
 allTrainRSE <- data.frame(ResStErrMLR, ResStErrPLS, ResStErrRF, ResStErrSVR)
 allTestR2 <- data.frame(MLRtestR2, PLStestR2, RFtestR2, SVRtestR2)
+
+
+#Compare all RMSE
+
+dataRange <- range(moddata3$log.rate.exp)
+Range <- abs(dataRange[1]) + dataRange[2]
+RMSEthreshold <- Range / 10
+
+TrainRMSEs <- data.frame(MLRtrainRMSE, PLStrainRMSE, RFtrainRMSE, SVRtrainRMSE)
+TestRMSEs <- data.frame(MLRtestRMSE, PLStestRMSE, RFtestRMSE, SVRtestRMSE)
+
 
 
 #Calculate AD using kNN
