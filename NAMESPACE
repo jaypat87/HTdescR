@@ -2,6 +2,5 @@
 
 export(cleanmerge)
 export(htbatch)
-export(htbatch_hash)
 export(htdesc)
 export(runModel)

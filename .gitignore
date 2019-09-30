@@ -22,3 +22,4 @@ htbatch-other.txt
 htbatch-hash.txt
 packrat/lib*/
 renv.lock
+renv
