@@ -2,23 +2,21 @@ Package: HTdescR
 Type: Package
 Title: Hammett-Taft type sigma descriptor calculator
 Version: 0.1.0
-Author: Jay M. Patel
-Maintainer: Jay M. Patel <jay@jaympatel.com>
-Description: Hammett-Taft descriptor calculator with mismatch tolerant 
-        maximum common substructure (fMCS) based fragment substitution algorithm. 
-        It also includes machine learning methods to estimate hydrolysis rate constants.  
+Authors@R: c(
+  person("Jay M.", "Patel", email = "jay@jaympatel.com", role = c("cre","aut")),
+  person("Michaela", "Koopmans", email = "michaela.koopmans@gmail.com", role = c("aut")),
+  person("John", "Olmstead", email = "john.r.olmstead@gmail.com", role = c("aut")))
+Maintainer: Jay M. Patel
+Description: Hammett-Taft descriptor calculator with mismatch tolerant maximum common substructure (fMCS) based fragment substitution algorithm. It also includes machine learning methods to estimate hydrolysis rate constants.  
 Depends: R (>= 2.10.0)
-Suggests: BiocStyle, knitr, rmarkdown,
-    testthat
+Suggests: BiocStyle, knitr, rmarkdown, testthat
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
 LazyLoad: yes
 URL: http://jaympatel.com
-biocViews: Cheminformatics
+biocViews: ChemmineR, ChemmineOB
 Imports: utils, dplyr, tidyr, caTools, stats, pls, randomForest, e1071, FNN, tibble, devtools,
-    BiocInstaller, ChemmineR, ChemmineOB, BiocGenerics,
-    RUnit, methods, parallel,
-    fmcsR, hash
+    methods, fmcsR, hash
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
