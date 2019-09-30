@@ -8,7 +8,7 @@ output:
 ---
 <!--
 %\VignetteEngine{knitr::rmarkdown}
-%\VignetteIndexEntry{Supplementary materials}
+%\VignetteIndexEntry{Supplementary materials 2}
 -->
 
 ```{r setup, include=FALSE}

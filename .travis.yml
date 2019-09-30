@@ -6,7 +6,6 @@ before_install:
   - sudo snap install openbabel
 
 bioc_packages:
-  - BiocInstaller
   - ChemmineR
   - ChemmineOB
   - BiocGenerics
