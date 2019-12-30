@@ -18,12 +18,13 @@
 #'
 #' @import hash
 #' @import utils
+#' @import dplyr
 #'
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' htbatch("./data/dataacidester.csv", sigma.selection ="A")
+#' htbatch("./inst/extdata/carbamateinputfile.csv", sigma.selection ="A")
 #' }
 htbatch <- function(file, sigma.selection = "A", ...) {
 
@@ -38,10 +39,10 @@ htbatch <- function(file, sigma.selection = "A", ...) {
 
   #Read the csv file as a dataframe
 
-  qsardataframe <- utils::read.csv(file, stringsAsFactors = FALSE,na.strings = "", encoding = "UTF-8")
+  qsardataframe <- utils::read.csv(file, stringsAsFactors = FALSE, na.strings = "", encoding = "UTF-8")
+  #qsardataframe <- qsardataframe %>% dplyr::mutate_all(dplyr::na_if, "")
 
-
-  # colnames(qsardataframe)[colnames(qsardataframe)=="ï..no"] <- "no"
+  #colnames(qsardataframe)[colnames(qsardataframe)=="ï..no"] <- "no"
 
   #Initializing the iterator
 
@@ -50,26 +51,26 @@ htbatch <- function(file, sigma.selection = "A", ...) {
 
   for (i in 1:n) {
     # create value for hash table to save instead of "r1.taft.smiles[i]" character string
-      taftsmiles1 <- qsardataframe$r1.taft.smiles[[i]]
-      indsmiles1 <- qsardataframe$r1.ind.smiles[[i]]
-      essmiles1 <- qsardataframe$r1.es.smiles[[i]]
-      meta1smiles1 <- qsardataframe$r1.meta1.smiles[[i]]
-      meta1smiles2 <- qsardataframe$r1.meta2.smiles[[i]]
-      parasmiles1 <- qsardataframe$r1.para.smiles[[i]]
-      ortho1smiles1 <- qsardataframe$r1.ortho1.smiles[[i]]
-      ortho1smiles2 <- qsardataframe$r1.ortho2.smiles[[i]]
-      taftsmiles2 <- qsardataframe$r2.taft.smiles[[i]]
-      indsmiles2 <- qsardataframe$r2.ind.smiles[[i]]
-      essmiles2 <- qsardataframe$r2.es.smiles[[i]]
-      meta2smiles1 <- qsardataframe$r2.meta1.smiles[[i]]
-      meta2smiles2 <- qsardataframe$r2.meta2.smiles[[i]]
-      parasmiles2 <- qsardataframe$r2.para1.smiles[[i]]
-      ortho2smiles1 <- qsardataframe$r2.ortho1.smiles[[i]]
-      ortho2smiles2 <- qsardataframe$r2.ortho2.smiles[[i]]
+    taftsmiles1 <- qsardataframe$r1.taft.smiles[[i]]
+    indsmiles1 <- qsardataframe$r1.ind.smiles[[i]]
+    essmiles1 <- qsardataframe$r1.es.smiles[[i]]
+    meta1smiles1 <- qsardataframe$r1.meta1.smiles[[i]]
+    meta1smiles2 <- qsardataframe$r1.meta2.smiles[[i]]
+    parasmiles1 <- qsardataframe$r1.para1.smiles[[i]]
+    ortho1smiles1 <- qsardataframe$r1.ortho1.smiles[[i]]
+    ortho1smiles2 <- qsardataframe$r1.ortho2.smiles[[i]]
+    taftsmiles2 <- qsardataframe$r2.taft.smiles[[i]]
+    indsmiles2 <- qsardataframe$r2.ind.smiles[[i]]
+    essmiles2 <- qsardataframe$r2.es.smiles[[i]]
+    meta2smiles1 <- qsardataframe$r2.meta1.smiles[[i]]
+    meta2smiles2 <- qsardataframe$r2.meta2.smiles[[i]]
+    parasmiles2 <- qsardataframe$r2.para1.smiles[[i]]
+    ortho2smiles1 <- qsardataframe$r2.ortho1.smiles[[i]]
+    ortho2smiles2 <- qsardataframe$r2.ortho2.smiles[[i]]
 
     if (is.na(qsardataframe$r1.meta1.smiles[i]) & is.na(qsardataframe$r1.ortho1.smiles[i]) & is.na(qsardataframe$r1.para1.smiles[i]) == TRUE) {
 
-      if (hash::has.key(taftsmiles1, hash_taft) == TRUE) {
+      if (is.na(taftsmiles1) == FALSE && hash::has.key(taftsmiles1, hash_taft) == TRUE) {
 
         #Copy info already in hash table into output dataframe
         t <- hash_taft[[taftsmiles1]]
@@ -78,20 +79,20 @@ htbatch <- function(file, sigma.selection = "A", ...) {
         qsardataframe$r1.taft.value[i] <- t$value
         rm (t)
 
-      } else {
+      } else if (is.na(taftsmiles1) == FALSE) {
 
-          #Perform search if info isn't already in hash table, then add info to output dataframe
-          t <- htdesc (smile = qsardataframe$r1.taft.smiles[i], HT.type = "taft", sigma.selection)
+        #Perform search if info isn't already in hash table, then add info to output dataframe
+        t <- htdesc (smile = qsardataframe$r1.taft.smiles[i], HT.type = "taft", sigma.selection)
 
-          hash_taft[[taftsmiles1]] <- t
+        hash_taft[[taftsmiles1]] <- t
 
-          qsardataframe$r1.taft.sub.smiles[i] <- as.character (t$sub)
-          qsardataframe$r1.taft.mcs.index[i] <- t$tanimoto
-          qsardataframe$r1.taft.value[i] <- t$value
-          rm (t)
+        qsardataframe$r1.taft.sub.smiles[i] <- as.character (t$sub)
+        qsardataframe$r1.taft.mcs.index[i] <- t$tanimoto
+        qsardataframe$r1.taft.value[i] <- t$value
+        rm (t)
       }
 
-      if (hash::has.key(indsmiles1, hash_ind) == TRUE) {
+      if (is.na(indsmiles1) == FALSE && hash::has.key(indsmiles1, hash_ind) == TRUE) {
 
         t <- hash_ind[[indsmiles1]]
         qsardataframe$r1.ind.sub.smiles[i] <- as.character (t$sub)
@@ -100,7 +101,7 @@ htbatch <- function(file, sigma.selection = "A", ...) {
         rm (t)
 
 
-      } else {
+      } else if (is.na(indsmiles1) == FALSE) {
 
         t <- htdesc (smile = qsardataframe$r1.ind.smiles[i], HT.type = "inductive", sigma.selection)
 
@@ -114,7 +115,7 @@ htbatch <- function(file, sigma.selection = "A", ...) {
 
       }
 
-      if (hash::has.key(essmiles1, hash_es) == TRUE) {
+      if (is.na(essmiles1) == FALSE && hash::has.key(essmiles1, hash_es) == TRUE) {
 
         t <- hash_es[[essmiles1]]
         qsardataframe$r1.es.sub.smiles[i] <- as.character (t$sub)
@@ -122,7 +123,7 @@ htbatch <- function(file, sigma.selection = "A", ...) {
         qsardataframe$r1.es.value[i] <- t$value
         rm (t)
 
-      } else {
+      } else if (is.na(essmiles1) == FALSE) {
 
         t <- htdesc (smile = qsardataframe$r1.es.smiles[i], HT.type = "es", sigma.selection)
 
@@ -176,14 +177,14 @@ htbatch <- function(file, sigma.selection = "A", ...) {
 
       } else {
 
-          t <- htdesc (smile = qsardataframe$r1.meta1.smiles[i], HT.type = "meta", sigma.selection)
+        t <- htdesc (smile = qsardataframe$r1.meta1.smiles[i], HT.type = "meta", sigma.selection)
 
-          hash_meta[[meta1smiles1]] <- t
+        hash_meta[[meta1smiles1]] <- t
 
-          qsardataframe$r1.meta1.sub.smiles[i] <- as.character (t$sub)
-          qsardataframe$r1.meta1.mcs.index[i] <- t$tanimoto
-          qsardataframe$r1.meta1.value[i] <- t$value
-          rm (t)
+        qsardataframe$r1.meta1.sub.smiles[i] <- as.character (t$sub)
+        qsardataframe$r1.meta1.mcs.index[i] <- t$tanimoto
+        qsardataframe$r1.meta1.value[i] <- t$value
+        rm (t)
       }
     }
 
@@ -199,20 +200,20 @@ htbatch <- function(file, sigma.selection = "A", ...) {
 
       } else {
 
-          t <- htdesc (smile = qsardataframe$r1.meta2.smiles[i], HT.type = "meta", sigma.selection)
+        t <- htdesc (smile = qsardataframe$r1.meta2.smiles[i], HT.type = "meta", sigma.selection)
 
-          hash_meta[[meta1smiles2]] <- t
+        hash_meta[[meta1smiles2]] <- t
 
-          qsardataframe$r1.meta2.sub.smiles[i] <- as.character (t$sub)
-          qsardataframe$r1.meta2.mcs.index[i] <- t$tanimoto
-          qsardataframe$r1.meta2.value[i] <- t$value
-          rm (t)
+        qsardataframe$r1.meta2.sub.smiles[i] <- as.character (t$sub)
+        qsardataframe$r1.meta2.mcs.index[i] <- t$tanimoto
+        qsardataframe$r1.meta2.value[i] <- t$value
+        rm (t)
       }
     }
 
     if (is.na(qsardataframe$r1.ortho1.smiles[i]) == FALSE) {
 
-      if (hash::has.key(ortho1smiles1, hash_ortho) == FALSE) {
+      if (hash::has.key(ortho1smiles1, hash_ortho) == TRUE) {
 
         t <- hash_ortho[[ortho1smiles1]]
         qsardataframe$r1.ortho1.sub.smiles[i] <- as.character (t$sub)
@@ -222,20 +223,20 @@ htbatch <- function(file, sigma.selection = "A", ...) {
 
       } else {
 
-          t <- htdesc (smile = qsardataframe$r1.ortho1.smiles[i], HT.type = "ortho", sigma.selection)
+        t <- htdesc (smile = qsardataframe$r1.ortho1.smiles[i], HT.type = "ortho", sigma.selection)
 
-          hash_ortho[[ortho1smiles1]] <- t
+        hash_ortho[[ortho1smiles1]] <- t
 
-          qsardataframe$r1.ortho1.sub.smiles[i] <- as.character (t$sub)
-          qsardataframe$r1.ortho1.mcs.index[i] <- t$tanimoto
-          qsardataframe$r1.ortho1.value[i] <- t$value
-          rm (t)
+        qsardataframe$r1.ortho1.sub.smiles[i] <- as.character (t$sub)
+        qsardataframe$r1.ortho1.mcs.index[i] <- t$tanimoto
+        qsardataframe$r1.ortho1.value[i] <- t$value
+        rm (t)
       }
     }
 
     if (is.na(qsardataframe$r1.ortho2.smiles[i]) == FALSE) {
 
-      if (hash::has.key(ortho1smiles2, hash_ortho) == FALSE) {
+      if (hash::has.key(ortho1smiles2, hash_ortho) == TRUE) {
 
         t <- hash_ortho[[ortho1smiles2]]
         qsardataframe$r1.ortho2.sub.smiles[i] <- as.character (t$sub)
@@ -245,19 +246,20 @@ htbatch <- function(file, sigma.selection = "A", ...) {
 
       } else {
 
-          t <- htdesc (smile = qsardataframe$r1.ortho2.smiles[i], HT.type = "ortho", sigma.selection)
+        t <- htdesc (smile = qsardataframe$r1.ortho2.smiles[i], HT.type = "ortho", sigma.selection)
 
-          hash_ortho[[ortho1smiles2]] <- t
+        hash_ortho[[ortho1smiles2]] <- t
 
-          qsardataframe$r1.ortho2.sub.smiles[i] <- as.character (t$sub)
-          qsardataframe$r1.ortho2.mcs.index[i] <- t$tanimoto
-          qsardataframe$r1.ortho2.value[i] <- t$value
-          rm (t)
+        qsardataframe$r1.ortho2.sub.smiles[i] <- as.character (t$sub)
+        qsardataframe$r1.ortho2.mcs.index[i] <- t$tanimoto
+        qsardataframe$r1.ortho2.value[i] <- t$value
+        rm (t)
       }
     }
 
-    if (is.na(qsardataframe$r1.ortho2.smiles[i]) == FALSE) {
-      if (hash::has.key(parasmiles1, hash_para) == FALSE) {
+    if (is.na(qsardataframe$r1.para1.smiles[i]) == FALSE) {
+
+      if (hash::has.key(parasmiles1, hash_para) == TRUE) {
 
         t <- hash_para[[parasmiles1]]
         qsardataframe$r1.para1.sub.smiles[i] <- as.character (t$sub)
@@ -267,14 +269,14 @@ htbatch <- function(file, sigma.selection = "A", ...) {
 
       } else {
 
-          t <- htdesc (smile = qsardataframe$r1.para1.smiles[i], HT.type = "para", sigma.selection)
+        t <- htdesc (smile = qsardataframe$r1.para1.smiles[i], HT.type = "para", sigma.selection)
 
-          hash_para[[parasmiles1]] <- t
+        hash_para[[parasmiles1]] <- t
 
-          qsardataframe$r1.para1.sub.smiles[i] <- as.character (t$sub)
-          qsardataframe$r1.para1.mcs.index[i] <- t$tanimoto
-          qsardataframe$r1.para1.value[i] <- t$value
-          rm (t)
+        qsardataframe$r1.para1.sub.smiles[i] <- as.character (t$sub)
+        qsardataframe$r1.para1.mcs.index[i] <- t$tanimoto
+        qsardataframe$r1.para1.value[i] <- t$value
+        rm (t)
       }
     }
 
@@ -282,7 +284,7 @@ htbatch <- function(file, sigma.selection = "A", ...) {
 
     if (is.na(qsardataframe$r2.meta1.smiles[i]) & is.na(qsardataframe$r2.ortho1.smiles[i]) & is.na(qsardataframe$r2.para1.smiles[i]) == TRUE) {
 
-      if (hash::has.key(taftsmiles2, hash_taft) == TRUE) {
+      if (is.na(taftsmiles2) == FALSE && hash::has.key(taftsmiles2, hash_taft) == TRUE) {
 
         t <- hash_taft[[taftsmiles2]]
         qsardataframe$r2.taft.sub.smiles[i] <- as.character (t$sub)
@@ -290,7 +292,7 @@ htbatch <- function(file, sigma.selection = "A", ...) {
         qsardataframe$r2.taft.value[i] <- t$value
         rm (t)
 
-      } else {
+      } else if (is.na(taftsmiles2) == FALSE) {
 
         # calling htdesc to fill substitute mcs values
 
@@ -304,7 +306,7 @@ htbatch <- function(file, sigma.selection = "A", ...) {
         rm(t)
       }
 
-      if (hash::has.key(indsmiles2, hash_ind) == TRUE) {
+      if (is.na(indsmiles2) == FALSE && hash::has.key(indsmiles2, hash_ind) == TRUE) {
 
         t <- hash_ind[[indsmiles2]]
         qsardataframe$r2.ind.sub.smiles[i] <- as.character (t$sub)
@@ -312,20 +314,20 @@ htbatch <- function(file, sigma.selection = "A", ...) {
         qsardataframe$r2.ind.value[i] <- t$value
         rm (t)
 
-      } else {
+      } else if (is.na(indsmiles2) == FALSE) {
 
-          t <- htdesc (smile = qsardataframe$r2.ind.smiles[i], HT.type = "inductive", sigma.selection)
+        t <- htdesc (smile = qsardataframe$r2.ind.smiles[i], HT.type = "inductive", sigma.selection)
 
-          hash_ind[[indsmiles2]] <- t
+        hash_ind[[indsmiles2]] <- t
 
-          qsardataframe$r2.ind.sub.smiles[i] <- as.character (t$sub)
-          qsardataframe$r2.ind.mcs.index[i] <- t$tanimoto
-          qsardataframe$r2.ind.value[i] <- t$value
-          rm (t)
+        qsardataframe$r2.ind.sub.smiles[i] <- as.character (t$sub)
+        qsardataframe$r2.ind.mcs.index[i] <- t$tanimoto
+        qsardataframe$r2.ind.value[i] <- t$value
+        rm (t)
 
       }
 
-      if (hash::has.key(essmiles2, hash_es) == TRUE) {
+      if (is.na(essmiles2) == FALSE && hash::has.key(essmiles2, hash_es) == TRUE) {
 
         t <- hash_es[[essmiles2]]
         qsardataframe$r2.es.sub.smiles[i] <- as.character (t$sub)
@@ -333,16 +335,16 @@ htbatch <- function(file, sigma.selection = "A", ...) {
         qsardataframe$r2.es.value[i] <- t$value
         rm (t)
 
-      } else {
+      } else if (is.na(essmiles2) == FALSE) {
 
-          t <- htdesc (smile = qsardataframe$r2.es.smiles[i], HT.type = "es", sigma.selection)
+        t <- htdesc (smile = qsardataframe$r2.es.smiles[i], HT.type = "es", sigma.selection)
 
-          hash_es[[essmiles2]] <- t
+        hash_es[[essmiles2]] <- t
 
-          qsardataframe$r2.es.sub.smiles[i] <- as.character (t$sub)
-          qsardataframe$r2.es.mcs.index[i] <- t$tanimoto
-          qsardataframe$r2.es.value[i] <- t$value
-          rm (t)
+        qsardataframe$r2.es.sub.smiles[i] <- as.character (t$sub)
+        qsardataframe$r2.es.mcs.index[i] <- t$tanimoto
+        qsardataframe$r2.es.value[i] <- t$value
+        rm (t)
 
       }
 
@@ -502,7 +504,7 @@ htbatch <- function(file, sigma.selection = "A", ...) {
 
   closeAllConnections()
   # I am not sure why this is here, but dont remove it!!
-  return (qsardataframe)
+  return(qsardataframe)
 
   #work still left
   # Low priority
