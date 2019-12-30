@@ -42,12 +42,12 @@ htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
 
   } else if (class(smile) == "character") {
 
-    #smile <- methods::as (smile, "SMIset")
+      #smile <- methods::as (smile, "SMIset")
 
       #Convert SMILES character string to SDF
       sampleSDF <- ChemmineR::smiles2sdf(smile)
-# add escape character fix
-# possibly can use stringr and use '\\\\' for regex match and change, but note that this is not a real problem, since the inputcsvfiles will have smiles which are already forced with double \\ characters by R itself when it read it
+      # add escape character fix
+      # possibly can use stringr and use '\\\\' for regex match and change, but note that this is not a real problem, since the inputcsvfiles will have smiles which are already forced with double \\ characters by R itself when it read it
 
   } else if (class(smile) == "factor") {
       #Convert SMILES as factor to SDF
