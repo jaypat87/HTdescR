@@ -5,7 +5,7 @@
 #' @param data chemical descriptor data frame
 #' @param method The model from which the prediction should be generated. Valid inputs are "SVR", "MLR", "RF", and "PLS".
 #'
-#' @return a data frame containing indeces, rate constant prediction, applicability domain info, and descriptors
+#' @return a data frame containing indices, rate constant prediction, applicability domain info, and descriptors
 #'
 #' @import stats
 #' @import dplyr
@@ -21,16 +21,16 @@
 runModel <- function(data, method){
 
   n <- nrow(data)
-  preds <- data.frame(row.names = 1:n)
+  preds <- data.frame(row.names = 1:n) #Initialize dataframe for PLS predictions
   PREDset <- data[c(2:3,5:6)]   #Prep data for use - only descriptors
-  ADset <- dplyr::mutate(PREDset, index = seq_len(n)) #Prep data for use in AD calculation
-  SetAppDom <- data.frame(Index = numeric(), AD = character(), ADLevel = numeric())
+  ADset <- dplyr::mutate(PREDset, index = seq_len(n)) #Prep data for use in AD calculation - descriptors and index numbers
+  SetAppDom <- data.frame(Index = numeric(), AD = character(), ADLevel = numeric()) #Initialize applicability domain dataframe
   predictionsDF <- data.frame() #Initialize dataframe for predictions -- do we need this?
 
   if (method == "SVR") {
     i <- 1
     for (m in SVMmods) {
-      preds[i] <- stats::predict(m, newdata = PREDset, type = "response") #Predict rates
+      preds[i] <- stats::predict(m, newdata = PREDset, type = "response") #Predict rates over all 100 saved models
       i = i + 1
     }
 
@@ -52,13 +52,13 @@ runModel <- function(data, method){
     colnames(ratepreds) <- "ratepreds"
 
     SVRout <- data.frame(data, logpreds, ratepreds) #Bind original data with predicted rates
-    predictionsDF <- as.data.frame(SVRout[c(1,8:9,2:3,5:6)])
+    predictionsDF <- as.data.frame(SVRout[c(1,8:9,2:3,5:6)]) #Order columns for predictions dataframe
 
 
   } else if (method == "MLR") {
     i <- 1
     for (m in MLRmods) {
-      preds[i] <- stats::predict(m, newdata = PREDset, type = "response") #Predict rates
+      preds[i] <- stats::predict(m, newdata = PREDset, type = "response") #Predict rates over all 100 saved models
       i = i + 1
     }
 
@@ -80,13 +80,13 @@ runModel <- function(data, method){
     colnames(ratepreds) <- "ratepreds"
 
     MLRout <- data.frame(data, logpreds, ratepreds) #Bind original data with predicted rates
-    predictionsDF <- as.data.frame(MLRout[c(1,8:9,2:3,5:6)])
+    predictionsDF <- as.data.frame(MLRout[c(1,8:9,2:3,5:6)]) #Order columns for predictions dataframe
 
 
   } else if (method == "RF") {
     i <- 1
     for (m in RFmods) {
-      preds[i] <- stats::predict(m, newdata = PREDset, type = "response") #Predict rates
+      preds[i] <- stats::predict(m, newdata = PREDset, type = "response") #Predict rates over all 100 saved models
       i = i + 1
     }
 
@@ -108,15 +108,15 @@ runModel <- function(data, method){
     colnames(ratepreds) <- "ratepreds"
 
     RFout <- data.frame(data, logpreds, ratepreds) #Bind original data with predicted rates
-    predictionsDF <- as.data.frame(RFout[c(1,8:9,2:3,5:6)])
+    predictionsDF <- as.data.frame(RFout[c(1,8:9,2:3,5:6)]) #Order columns for predictions dataframe
 
 
   } else if (method == "PLS") {
     i <- 1
     for (m in PLSmods) {
-      pred_pls <- stats::predict(m, newdata = PREDset, type = "response") #Predict rates
-      pred_pls <- data.frame(pred_pls)
-      preds[i] <- data.frame(preds = pred_pls$log.rate.exp.4.comps)
+      pred_pls <- stats::predict(m, newdata = PREDset, type = "response") #Predict rates over all 100 saved models, output includes predictions for 1, 2, 3, and 4 components
+      pred_pls <- data.frame(pred_pls) #Convert to dataframe to pull out the "4 components" predictions
+      preds[i] <- data.frame(preds = pred_pls$log.rate.exp.4.comps) #Pull out "4 components" prediction column
       i = i + 1
     }
 
@@ -138,7 +138,7 @@ runModel <- function(data, method){
     colnames(ratepreds) <- "ratepreds"
 
     PLSout <- data.frame(data, logpreds, ratepreds) #Bind original data with predicted rates
-    predictionsDF <- as.data.frame(PLSout[c(1,8:9,2:3,5:6)])
+    predictionsDF <- as.data.frame(PLSout[c(1,8:9,2:3,5:6)]) #Order columns for predictions dataframe
 
 
   } else {
@@ -152,11 +152,11 @@ runModel <- function(data, method){
 
     TestChem <- dplyr::filter(ADset, index == i) #Filter the new data to pick out each chemical individually
     CompareSet <- dplyr::bind_rows(ADTrain, TestChem) #Add individual chemical to model data
-    CompareSet1 <- CompareSet[c(1:4)]
+    CompareSet1 <- CompareSet[c(1:4)] #Pull out just descriptors, no loopnum or index columns
     CompareAD1 <- FNN::knn.dist(CompareSet1, k = 5, algorithm = c("kd_tree", "cover_tree", "CR", "brute")) #Find distances of 5 nearest neighbors
     CompareAD1 <- as.data.frame(CompareAD1)
     CompareAD2 <- dplyr::mutate(CompareAD1, avgDist = rowMeans(CompareAD1)) #Calculate average distance
-    TestChemAD <- CompareAD2$avgDist[71]
+    TestChemAD <- CompareAD2$avgDist[71] #Store average distance for new chemical
 
     if (TestChemAD <= P95) {
       SetAppDom <- dplyr::add_row(SetAppDom, Index = i, AD = "IN", ADLevel = TestChemAD) #If avg distance for new chemical is less than 95% threshold, chemical is in AD
@@ -165,11 +165,11 @@ runModel <- function(data, method){
     }
   }
 
-  AppDomInfo <- SetAppDom[c(2:3)]
-  Indices <- SetAppDom[1]
-  predicted <- predictionsDF[c(1:3)]
-  desc <- predictionsDF[c(4:7)]
-  Predictions <- dplyr::bind_cols(Indices, predicted, AppDomInfo, desc)
+  AppDomInfo <- SetAppDom[c(2:3)] #Pull out AD in/out and AD level
+  Indices <- SetAppDom[1] #Pull out indices
+  predicted <- predictionsDF[c(1:3)] #Pull out experimental values, logratepreds, ratepreds
+  desc <- predictionsDF[c(4:7)] #Pull out descriptors
+  Predictions <- dplyr::bind_cols(Indices, predicted, AppDomInfo, desc) #Bind all together to form final dataframe
   return(Predictions)
 }
 
