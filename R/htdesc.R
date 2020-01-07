@@ -9,7 +9,7 @@
 #'
 #' @param smile SMILES string for a chemical fragment in character, factor, or SMIset datatype.
 #' @param HT.type The type of Hammett-Taft (HT) descriptor; valid inputs include "taft", "meta", "para", "ortho", "inductive", "es" and "user" for a user defined sigma descriptor.
-#' @param sigma.selection \itemize{The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", and "H":
+#' @param sigma.selection \itemize{The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", "H", "Avg.dist", and "Med":
 #' \item A = Avgerage value
 #' \item B = Hansch preferred value if available then EPIsuite value if available then Average value
 #' \item C = EPIsuite value if available then Hansch preferred value if available then Average of distinct values
@@ -21,7 +21,7 @@
 #' \item Avg.dist = Average of Distinct value
 #' \item Med = Median Value
 #' }
-#' @param ... arguments from the fmcsR::fmcsBatch such as al, au, bl, and bu
+#' @param ... arguments to be passed to fmcsR::fmcsBatch, such as al, au, bl, and bu
 #'
 #' @return A list containing the tanimoto coefficient for the closest matching MCS, SMILES string of the maximum common substructure (MCS), and index of the matched fragment from the library.
 #'
@@ -87,7 +87,7 @@ htdesc <- function(smile, HT.type = "taft", sigma.selection = "A", ...) {
   }
 
   #Conduct search
-  fmcsoutput <- fmcsR::fmcsBatch(sampleSDF[1], sigmalibrarySDF)
+  fmcsoutput <- fmcsR::fmcsBatch(sampleSDF[1], sigmalibrarySDF, ...)
   fmcsoutputframe <- data.frame(fmcsoutput, siglookuptable)
 
   #Order output to find highest Tanimoto coefficient
