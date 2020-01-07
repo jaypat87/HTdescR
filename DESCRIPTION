@@ -8,10 +8,8 @@ Authors@R: c(
   person("John", "Olmstead", email = "john.r.olmstead@gmail.com", role = c("aut")))
 Maintainer: Jay M. Patel <jay@jaympatel.com>
 Description: Hammett-Taft descriptor calculator with mismatch tolerant maximum common substructure (fMCS) based fragment substitution algorithm. It also includes machine learning methods to estimate hydrolysis rate constants.  
-Depends: R (>= 2.10.0)
-Suggests: BiocStyle, BiocGenerics, knitr, rmarkdown, testthat, stats, FNN,
-    pls, randomForest, e1071, caTools, tibble,
-    ChemmineOB
+Depends: R (>= 3.2.3)
+Suggests: BiocStyle, BiocGenerics, knitr, rmarkdown, testthat, stats, FNN, pls, randomForest, e1071, caTools, tibble, ChemmineOB
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
