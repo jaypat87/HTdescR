@@ -90,7 +90,7 @@ for(i in 1:100){
   Q2 <- 1 - (sum(res^2)) / (sum((TrainT - mean(TrainT))^2)) #Testing set R2 (called Q2 here)
   MLRstat <- data.frame(model="MLR",RMSEin, R2, RMSEout, Q2)
   MLRallstat <- rbind(MLRallstat, MLRstat)
-  predALL <- stats::predict(model, newdata=features, type="response")
+  predALL <- stats::predict(model, newdata=features, type="response") #Predict on full dataset
   MLRpreds <- data.frame(MLRpreds, predALL, check.names=TRUE)
 
 
@@ -100,21 +100,21 @@ for(i in 1:100){
   PLSmods[[i]] <- model
   predIN <- stats::predict(model, newdata=TrainF, type="response") #Predict on training set to check internal model accuracy
   predIN <- data.frame(predIN)
-  predIN <- predIN$log.rate.exp.4.comps
+  predIN <- predIN$log.rate.exp.4.comps #Pull out predictions for the 4 component model
   res <- predIN - TrainT #Training set residuals
   RMSEin <- sqrt(mean(res^2)) #Training set RMSE
   R2 <- 1 - (sum(res^2)) / (sum((TrainT - mean(TrainT))^2)) #Training set R2
   predOUT <- stats::predict(model, newdata=TestF, type="response") #Predict on testing set to check predictive accuracy
   predOUT <- data.frame(predOUT)
-  predOUT <- predOUT$log.rate.exp.4.comps
+  predOUT <- predOUT$log.rate.exp.4.comps #Pull out predictions for the 4 component model
   res <- predOUT - TestT #Testing set residuals
   RMSEout <- sqrt(mean(res^2)) #Testing set RMSE
   Q2 <- 1 - (sum(res^2)) / (sum((TrainT - mean(TrainT))^2)) #Testing set R2 (called Q2 here)
   PLSstat <- data.frame(model="PLS",RMSEin, R2, RMSEout, Q2)
   PLSallstat <- rbind(PLSallstat, PLSstat)
-  predALL <- stats::predict(model, newdata=features, type="response")
+  predALL <- stats::predict(model, newdata=features, type="response") #Predict on full dataset
   predALL <- data.frame(predALL)
-  predALL <- data.frame(predALL = predALL$log.rate.exp.4.comps)
+  predALL <- data.frame(predALL = predALL$log.rate.exp.4.comps) #Pull out predictions for the 4 component model
   PLSpreds <- data.frame(PLSpreds, predALL, check.names=TRUE)
 
 
@@ -122,17 +122,17 @@ for(i in 1:100){
 
   model <- randomForest::randomForest(log.rate.exp~., data = Training, ntree = 500, nodesize = 5, mtry = 1, importance = TRUE, na.action = na.omit)
   RFmods[[i]] <- model
-  predIN <- stats::predict(model, newdata=TrainF, type="response")
-  res <- predIN - TrainT
-  RMSEin <- sqrt(mean(res^2))
-  R2 <- 1 - (sum(res^2)) / (sum((TrainT - mean(TrainT))^2))
-  predOUT <- stats::predict(model, newdata=TestF, type="response")
-  res <- predOUT - TestT
-  RMSEout <- sqrt(mean(res^2))
-  Q2 <- 1 - (sum(res^2)) / (sum((TrainT - mean(TrainT))^2))
+  predIN <- stats::predict(model, newdata=TrainF, type="response") #Predict on training set to check internal model accuracy
+  res <- predIN - TrainT #Training set residuals
+  RMSEin <- sqrt(mean(res^2)) #Training set RMSE
+  R2 <- 1 - (sum(res^2)) / (sum((TrainT - mean(TrainT))^2)) #Training set R2
+  predOUT <- stats::predict(model, newdata=TestF, type="response") #Predict on testing set to check predictive accuracy
+  res <- predOUT - TestT #Testing set residuals
+  RMSEout <- sqrt(mean(res^2)) #Testing set RMSE
+  Q2 <- 1 - (sum(res^2)) / (sum((TrainT - mean(TrainT))^2)) #Testing set R2 (called Q2 here)
   RFstat <- data.frame(model="RF",RMSEin, R2, RMSEout, Q2)
   RFallstat <- rbind(RFallstat, RFstat)
-  predALL <- stats::predict(model, newdata=features, type="response")
+  predALL <- stats::predict(model, newdata=features, type="response") #Predict on full dataset
   RFpreds <- data.frame(RFpreds, predALL, check.names=TRUE)
 
 
@@ -140,17 +140,17 @@ for(i in 1:100){
 
   model <- e1071::svm(log.rate.exp~., data = Training, cost = 75.5, epsilon = 0.033, gamma = 0.9970)
   SVMmods[[i]] <- model
-  predIN <- stats::predict(model, newdata=TrainF, type="response")
-  res <- predIN - TrainT
-  RMSEin <- sqrt(mean(res^2))
-  R2 <- 1 - (sum(res^2)) / (sum((TrainT - mean(TrainT))^2))
-  predOUT <- stats::predict(model, newdata=TestF, type="response")
-  res <- predOUT - TestT
-  RMSEout <- sqrt(mean(res^2))
-  Q2 <- 1 - (sum(res^2)) / (sum((TrainT - mean(TrainT))^2))
+  predIN <- stats::predict(model, newdata=TrainF, type="response") #Predict on training set to check internal model accuracy
+  res <- predIN - TrainT #Training set residuals
+  RMSEin <- sqrt(mean(res^2)) #Training set RMSE
+  R2 <- 1 - (sum(res^2)) / (sum((TrainT - mean(TrainT))^2)) #Training set R2
+  predOUT <- stats::predict(model, newdata=TestF, type="response") #Predict on testing set to check predictive accuracy
+  res <- predOUT - TestT #Testing set residuals
+  RMSEout <- sqrt(mean(res^2)) #Testing set RMSE
+  Q2 <- 1 - (sum(res^2)) / (sum((TrainT - mean(TrainT))^2)) #Testing set R2 (called Q2 here)
   SVMstat <- data.frame(model="SVM",RMSEin, R2, RMSEout, Q2)
   SVMallstat <- rbind(SVMallstat, SVMstat)
-  predALL <- stats::predict(model, newdata=features, type="response")
+  predALL <- stats::predict(model, newdata=features, type="response") #Predict on full dataset
   SVMpreds <- data.frame(SVMpreds, predALL, check.names=TRUE)
 
 }
@@ -221,23 +221,4 @@ P95 <- stats::quantile(AD4$avgDist, prob = 0.95) #Finding the 95 percentile of t
 
 ADTrainSet <- tibble::rownames_to_column(modeldata)
 ADTrainSet <- tibble::add_column(ADTrainSet, loopnum = 0)
-ADTrain <- ADTrainSet[c(3:7)]
-
-
-# Store Internal Data -----------------------------------------------------
-
-list = c("es", "esSDF", "indSDF", "indsigma", "metaSDF", "metasigma", "orthoSDF", "orthosigma", "paraSDF", "parasigma", "taftSDF", "taftsigma", "userSDF", "usersigma")
-
-for (a in list) {
-  file = paste(c("./data/",a,".rda"), collapse = "")
-  load(file)
-}
-
-htdescHelper <- read.csv("./inst/extdata/htdescHelper.csv")
-
-usethis::use_data(MLRmods, PLSmods, RFmods, SVMmods, coeffics,
-                  htdescHelper, P95, ADTrain,
-                  esSDF, es, indSDF, indsigma, metaSDF, metasigma,
-                  orthoSDF, orthosigma, paraSDF, parasigma, taftSDF, taftsigma,
-                  userSDF, usersigma,
-                  internal = TRUE, overwrite = TRUE)
+ADTrain <- ADTrainSet[c(3:7)] #Pull out info to be used in AD calculations for predicted compounds
