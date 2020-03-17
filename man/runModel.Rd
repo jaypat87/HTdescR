@@ -9,10 +9,10 @@ runModel(data, method)
 \arguments{
 \item{data}{chemical descriptor data frame}
 
-\item{method}{The model from which the prediction should be generated.}
+\item{method}{The model from which the prediction should be generated. Valid inputs are "SVR", "MLR", "RF", and "PLS".}
 }
 \value{
-a data frame containing indeces, rate constant prediction, applicability domain info, and descriptors
+a data frame containing indices, rate constant prediction, applicability domain info, and descriptors
 }
 \description{
 R function that generates predictions for chemicals based on the machine learning method selected.
