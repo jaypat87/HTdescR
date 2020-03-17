@@ -9,9 +9,6 @@
  \item{sigma}{fragment SMILES, epi.value}
  ...
 }}
-\source{
-
-}
 \usage{
 taftsigma
 }

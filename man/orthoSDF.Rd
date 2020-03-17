@@ -5,9 +5,6 @@
 \alias{orthoSDF}
 \title{FMCS searchable sigma values of ortho substituted fragments}
 \format{A Spatial Data File list of 44 s4 objects}
-\source{
-
-}
 \usage{
 orthoSDF
 }

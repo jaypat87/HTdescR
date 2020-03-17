@@ -5,9 +5,6 @@
 \alias{paraSDF}
 \title{FMCS searchable sigma values of para substituted fragments}
 \format{A Spatial Data File list of 369 s4 objects}
-\source{
-
-}
 \usage{
 paraSDF
 }

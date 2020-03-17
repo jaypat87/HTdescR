@@ -5,9 +5,6 @@
 \alias{taftSDF}
 \title{FMCS searchable sigma values of taft fragments}
 \format{A Spatial Data File list of 639 s4 objects}
-\source{
-
-}
 \usage{
 taftSDF
 }

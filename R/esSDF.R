@@ -4,7 +4,6 @@
 #' calculated from the dataset amalgamation. fmcs searchable component to the "es" data frame.
 #'
 #' @format A Spatial Data File list of 260 s4 objects
-#' @source
 #'
 #'
 #'

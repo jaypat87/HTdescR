@@ -5,9 +5,6 @@
 \alias{metaSDF}
 \title{FMCS searchable sigma values of meta substituted fragments}
 \format{A Spatial Data File list of 373 s4 objects}
-\source{
-
-}
 \usage{
 metaSDF
 }

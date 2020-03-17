@@ -5,9 +5,6 @@
 \alias{esSDF}
 \title{FMCS searchable sigma values of steric fragments}
 \format{A Spatial Data File list of 260 s4 objects}
-\source{
-
-}
 \usage{
 esSDF
 }
