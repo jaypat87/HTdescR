@@ -17,9 +17,8 @@
 #' @return Filled dataframe columns resulting from similarity search and value extraction from
 #' esSDF, indSDF, metaSDF, paraSDF, orthoSDF, taftSDF, userSDF
 #'
-#' @import hash
-#' @import utils
-#' @import dplyr
+#' @importFrom hash hash has.key
+#' @importFrom utils read.csv
 #'
 #' @export
 #'

@@ -7,12 +7,9 @@
 #'
 #' @return a data frame containing indices, rate constant prediction, applicability domain info, and descriptors
 #'
-#' @import stats
-#' @import dplyr
-#' @import FNN
-#' @import randomForest
-#' @import e1071
-#' @import pls
+#' @importFrom stats predict
+#' @importFrom dplyr mutate filter bind_rows bind_cols add_row
+#' @importFrom FNN knn.dist
 #'
 #' @export
 #'

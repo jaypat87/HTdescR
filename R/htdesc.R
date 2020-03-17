@@ -25,9 +25,9 @@
 #'
 #' @return A list containing the tanimoto coefficient for the closest matching MCS, SMILES string of the maximum common substructure (MCS), and index of the matched fragment from the library.
 #'
-#' @import ChemmineR
-#' @import methods
-#' @import fmcsR
+#' @importFrom ChemmineR smiles2sdf
+#' @importFrom methods as
+#' @importFrom fmcsR fmcsBatch
 #'
 #' @export
 #'

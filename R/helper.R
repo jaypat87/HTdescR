@@ -6,7 +6,7 @@
 #' @param type Matches the HT.type specified in htbatch function value
 #' @param sigma.select The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", "H", and "U"
 #'
-#' @import dplyr
+#' @importFrom dplyr filter
 #'
 #' @return values from library that are inserted directly into qsardataframe
 #'

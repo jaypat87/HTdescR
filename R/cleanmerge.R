@@ -6,7 +6,7 @@
 #' @param qsardataframe returned dataframe from htbatch
 #' @param ... inherit arguments
 #'
-#' @import tidyr
+#' @importFrom tidyr replace_na
 #'
 #' @examples ## Not run: cleanmerge(qsardataframe)
 #' @export
