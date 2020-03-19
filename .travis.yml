@@ -1,0 +1,15 @@
+language: r
+sudo: true
+dist: trusty
+before_install:
+  - sudo apt-get --yes install snapd
+  - sudo snap install openbabel
+
+bioc_packages:
+  - ChemmineR
+  - ChemmineOB
+  - BiocGenerics
+  - fmcsR
+cache: packages
+
+

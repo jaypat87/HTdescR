@@ -1,8 +1,8 @@
-context("HTdescR")
+context("Test htdesc()")
 library(HTdescR)
 library(testthat)
 
-unit_test <- test_that("htdesc function", {
+test_that("htdesc() handles SMILES, HT types, and sigma selections correctly", {
   #Workflow A (CltA returns reg.avg)
   CltA <- htdesc(smile = '*Cl', HT.type = 'taft', sigma.selection = 'A')
   expect_identical(CltA[[1]],1)
@@ -108,4 +108,3 @@ unit_test <- test_that("htdesc function", {
   expect_identical(ClCCiG[[4]],0.18)
 })
 
-unit_test

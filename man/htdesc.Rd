@@ -2,7 +2,7 @@
 % Please edit documentation in R/htdesc.R
 \name{htdesc}
 \alias{htdesc}
-\title{Get Hamett-Taft descriptor for a single chemical fragment}
+\title{HTdesc}
 \usage{
 htdesc(smile, HT.type = "taft", sigma.selection = "A", ...)
 }
@@ -11,26 +11,31 @@ htdesc(smile, HT.type = "taft", sigma.selection = "A", ...)
 
 \item{HT.type}{The type of Hammett-Taft (HT) descriptor; valid inputs include "taft", "meta", "para", "ortho", "inductive", "es" and "user" for a user defined sigma descriptor.}
 
-\item{sigma.selection}{The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", and "H"
-A = Avgerage value
-B = Hansch preferred value if available then EPIsuite value if available then Average value
-C = EPIsuite value if available then Hansch preferred value if available then Average of distinct values
-D = EPIsuite value if available then Average of distinct value
-E = Hansch preferred value if available then Average of distinct value
-F = Hansch preferred value if available then mode value if available then median value
-G = EPIsuite value if available then Hansch preferred value if available then median value
-H = Mode if available then Average of distinct value
-Avg.dist = Average of Distinct value
-Med = Median Value}
+\item{sigma.selection}{\itemize{The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", "H", "Avg.dist", and "Med":
+\item A = Avgerage value
+\item B = Hansch preferred value if available then EPIsuite value if available then Average value
+\item C = EPIsuite value if available then Hansch preferred value if available then Average of distinct values
+\item D = EPIsuite value if available then Average of distinct value
+\item E = Hansch preferred value if available then Average of distinct value
+\item F = Hansch preferred value if available then mode value if available then median value
+\item G = EPIsuite value if available then Hansch preferred value if available then median value
+\item H = Mode if available then Average of distinct value
+\item Avg.dist = Average of Distinct value
+\item Med = Median Value
+}}
 
-\item{...}{arguments from the fmcsR::fmcbatch such as a and b}
+\item{...}{arguments to be passed to fmcsR::fmcsBatch, such as al, au, bl, and bu}
 }
 \value{
-A list containing tanimoto coefficient for the closest matching MCS, SMILES string of the MCS, and index nuber of the matched fragment from the library.
+A list containing the tanimoto coefficient for the closest matching MCS, SMILES string of the maximum common substructure (MCS), and index of the matched fragment from the library.
 }
 \description{
-Get values of Hammett-Taft descriptors for a given chemical fragment in SMILES string format by iterating through a lookup table. In case an exact match isnt found, this function uses a mismatch tolerant
-maximum common substructure (fMCS) based fragment substitution library to get the HT dexcriptors with highest tanimoto coefficient.
+Get Hamett-Taft descriptor value for a single chemical fragment
+}
+\details{
+Get values of Hammett-Taft descriptors for a given chemical fragment in SMILES string format by iterating through a lookup table.
+Returns values from an exact matching fragment from the library or uses a substituted fragment.
+In case an exact match isnt found, this function uses a mismatch-tolerant maximum common substructure (fMCS) based fragment substitution library to get the HT descriptors with highest tanimoto coefficient.
 }
 \examples{
 htdesc (smile = "CCC", HT.type = "taft", sigma.selection = "A")

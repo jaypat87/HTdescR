@@ -5,9 +5,6 @@
 \alias{indSDF}
 \title{FMCS searchable sigma values of inductive fragments}
 \format{A Spatial Data File list of 274 s4 objects}
-\source{
-
-}
 \usage{
 indSDF
 }

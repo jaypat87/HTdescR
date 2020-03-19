@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{helper}
 \alias{helper}
-\title{Expidited search for phenyl fragment sigma values}
+\title{Expedited search for phenyl fragment sigma values}
 \usage{
 helper(type, sigma.select)
 }
@@ -12,7 +12,7 @@ helper(type, sigma.select)
 \item{sigma.select}{The type of sigma to be returned; valid inputs include "A", "B", "C", "D", "E", "F", "G", "H", and "U"}
 }
 \value{
-values from library that is inserted directly into qsardataframe.
+values from library that are inserted directly into qsardataframe
 }
 \description{
 This function is for returning values for the phenyl fragment without running htdesc.

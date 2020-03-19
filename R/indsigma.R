@@ -7,7 +7,6 @@
 #'\describe{
 #' \item{sigma}{fragment SMILES, epi.value}
 #' }
-#' @source
 #'
 #'
 #'

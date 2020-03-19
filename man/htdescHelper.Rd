@@ -5,9 +5,6 @@
 \alias{htdescHelper}
 \title{Fast phenyl look up for htbatch}
 \format{A dataframe with 24 phenyl sigma SMILES, their sigma values, location designation, and sigma.selection formatted into 7 columns.}
-\source{
-
-}
 \usage{
 htdescHelper
 }

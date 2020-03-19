@@ -4,7 +4,6 @@
 #' calculated from the dataset amalgamation. fmcs searchable component to the "parasigma" data frame.
 #'
 #' @format A Spatial Data File list of 369 s4 objects
-#' @source
 #'
 #'
 #'
